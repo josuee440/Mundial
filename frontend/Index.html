@@ -186,6 +186,26 @@ tbody tr:last-child td { border-bottom: none; }
 .btn-rojo { background: rgba(255, 51, 68, 0.1); border: 1px solid rgba(255, 51, 68, 0.3); color: var(--rojo); }
 .btn-rojo:hover { background: var(--rojo); color: white; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 51, 68, 0.3); }
 
+/* ── MODALES CRUD ── */
+.modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000;
+  justify-content: center; align-items: center;
+}
+.modal-content {
+  background: var(--azul2); padding: 30px; border-radius: 16px; width: 400px;
+  border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.modal-content h2 { margin-bottom: 20px; font-family: 'Bebas Neue', sans-serif; color: var(--oro); font-size: 2rem;}
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-size: 0.8rem; color: var(--gris); margin-bottom: 5px; text-transform: uppercase;}
+.form-group input {
+  width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.3); color: white; outline: none;
+}
+.form-group input:focus { border-color: var(--oro); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
+
 /* ── BUSCADOR ── */
 .search-input {
   background: rgba(255, 255, 255, 0.03);
@@ -270,1687 +290,525 @@ tbody tr:last-child td { border-bottom: none; }
 #toast.error { background: var(--rojo); color: white; }
 .loading { text-align: center; padding: 40px; color: var(--gris); font-size: 0.9rem; }
 </style>
-
 </head>
-
 <body>
 
-
-
 <header>
-
   <div class="logo-wrap">
-
     <div class="logo-icon">⚽</div>
-
     <div>
-
       <div class="logo">Mundial_Fut UMG 2026</div>
-
       <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
-
     </div>
-
   </div>
-
   <nav>
-
     <button class="active" onclick="mostrar('dashboard',this)">🏠 Dashboard</button>
-
     <button onclick="mostrar('equipos',this)">🌎 Equipos</button>
-
     <button onclick="mostrar('jugadores',this)">👤 Jugadores</button>
-
     <button onclick="mostrar('estadios',this)">🏟️ Estadios</button>
-
     <button onclick="mostrar('entrenadores',this)">🧑‍💼 Entrenadores</button>
-
     <button onclick="mostrar('grupos',this)">📊 Grupos</button>
-
     <button onclick="mostrar('partidos',this)">📋 Partidos</button>
-
     <button onclick="mostrar('simulador',this)">⚡ Simulador</button>
-
     <button onclick="mostrar('reportes',this)">🏆 Reportes</button>
-
   </nav>
-
 </header>
 
-
-
-<!-- ══════════════ DASHBOARD ══════════════ -->
-
 <section id="sec-dashboard" class="seccion activa">
-
   <div class="seccion-titulo">Dashboard</div>
-
   <div class="dashboard-grid">
-
     <div class="stat-card"><div class="ico">🌎</div><div class="num" id="cnt-equipos">—</div><div class="lbl">Equipos</div></div>
-
     <div class="stat-card"><div class="ico">👤</div><div class="num" id="cnt-jugadores">—</div><div class="lbl">Jugadores</div></div>
-
     <div class="stat-card"><div class="ico">🏟️</div><div class="num" id="cnt-estadios">—</div><div class="lbl">Estadios</div></div>
-
     <div class="stat-card"><div class="ico">📋</div><div class="num" id="cnt-partidos">—</div><div class="lbl">Partidos</div></div>
-
     <div class="stat-card"><div class="ico">⚽</div><div class="num" id="cnt-goles">—</div><div class="lbl">Goles</div></div>
-
     <div class="stat-card"><div class="ico">🟨</div><div class="num" id="cnt-tarjetas">—</div><div class="lbl">Tarjetas</div></div>
-
   </div>
-
   <p style="color:var(--gris);font-size:0.82rem;">Última actualización: <span id="ultima-act" style="color:var(--oro)">—</span></p>
-
 </section>
-
-
-
-<!-- ══════════════ EQUIPOS ══════════════ -->
 
 <section id="sec-equipos" class="seccion">
-
-  <div class="seccion-titulo">Equipos</div>
-
-  <div class="tabla-wrap">
-
-    <table>
-
-      <thead><tr><th>#</th><th>País</th><th>Grupo</th></tr></thead>
-
-      <tbody id="tb-equipos"><tr><td colspan="3" class="loading">Cargando...</td></tr></tbody>
-
-    </table>
-
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div class="seccion-titulo" style="margin-bottom: 0;">Equipos</div>
+    <button class="btn btn-verde" onclick="abrirModalEquipo()">+ Nuevo Equipo</button>
   </div>
-
+  <div class="tabla-wrap">
+    <table>
+      <thead><tr><th>#</th><th>País</th><th>Grupo</th><th style="text-align: right;">Acciones</th></tr></thead>
+      <tbody id="tb-equipos"><tr><td colspan="4" class="loading">Cargando...</td></tr></tbody>
+    </table>
+  </div>
 </section>
-
-
-
-<!-- ══════════════ JUGADORES ══════════════ -->
 
 <section id="sec-jugadores" class="seccion">
-
   <div class="seccion-titulo">Jugadores</div>
-
   <div style="margin-bottom:14px;">
-
     <input class="search-input" id="buscar-jugador" type="text" placeholder="🔍 Buscar jugador o país..." oninput="filtrarJugadores()">
-
   </div>
-
   <div class="tabla-wrap">
-
     <table>
-
       <thead><tr><th>#</th><th>Nombre</th><th>Posición</th><th>Dorsal</th><th>País</th></tr></thead>
-
       <tbody id="tb-jugadores"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
-
     </table>
-
   </div>
-
 </section>
-
-
-
-<!-- ══════════════ ESTADIOS ══════════════ -->
 
 <section id="sec-estadios" class="seccion">
-
   <div class="seccion-titulo">Estadios</div>
-
   <div class="tabla-wrap">
-
     <table>
-
       <thead><tr><th>#</th><th>Nombre</th><th>Ciudad</th><th>País</th><th>Capacidad</th></tr></thead>
-
       <tbody id="tb-estadios"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
-
     </table>
-
   </div>
-
 </section>
-
-
-
-<!-- ══════════════ ENTRENADORES ══════════════ -->
 
 <section id="sec-entrenadores" class="seccion">
-
   <div class="seccion-titulo">Entrenadores</div>
-
   <div class="tabla-wrap">
-
     <table>
-
       <thead><tr><th>#</th><th>Nombre</th><th>País (Equipo)</th></tr></thead>
-
       <tbody id="tb-entrenadores"><tr><td colspan="3" class="loading">Cargando...</td></tr></tbody>
-
     </table>
-
   </div>
-
 </section>
-
-
-
-<!-- ══════════════ GRUPOS ══════════════ -->
 
 <section id="sec-grupos" class="seccion">
-
   <div class="seccion-titulo">Tabla de Grupos</div>
-
   <p style="color:var(--gris);font-size:0.82rem;margin-bottom:18px;">✔ Los 2 primeros de cada grupo clasifican a la siguiente fase.</p>
-
   <div class="grupos-grid" id="grupos-container"><div class="loading">Cargando...</div></div>
-
 </section>
-
-
-
-<!-- ══════════════ PARTIDOS ══════════════ -->
 
 <section id="sec-partidos" class="seccion">
-
   <div class="seccion-titulo">Partidos</div>
-
   <div class="tabla-wrap">
-
     <table>
-
       <thead><tr><th>ID</th><th>Fase</th><th>Local</th><th>Visitante</th><th>Resultado</th><th>Fecha</th><th>Estadio</th></tr></thead>
-
       <tbody id="tb-partidos"><tr><td colspan="7" class="loading">Cargando...</td></tr></tbody>
-
     </table>
-
   </div>
-
 </section>
-
-
-
-<!-- ══════════════ SIMULADOR ══════════════ -->
 
 <section id="sec-simulador" class="seccion">
-
   <div class="seccion-titulo">Simulador del Torneo</div>
-
-
-
-  <!-- BARRA DE PROGRESO -->
-
   <div style="display:flex;align-items:stretch;margin-bottom:22px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);">
-
     <div id="prog-1" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(45,198,83,0.2);color:var(--verde);border-right:1px solid rgba(255,255,255,0.08);cursor:pointer;" onclick="irAFase('grupos-sim')">1·GRUPOS</div>
-
     <div id="prog-2" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);border-right:1px solid rgba(255,255,255,0.08);cursor:pointer;" onclick="irAFase('eliminacion')">2·16AVOS</div>
-
     <div id="prog-3" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);border-right:1px solid rgba(255,255,255,0.08);">3·OCTAVOS</div>
-
     <div id="prog-4" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);border-right:1px solid rgba(255,255,255,0.08);">4·CUARTOS</div>
-
     <div id="prog-5" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);border-right:1px solid rgba(255,255,255,0.08);">5·SEMIS</div>
-
     <div id="prog-6" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);">6·FINAL🏆</div>
-
   </div>
-
-
-
-  <!-- FASE DE GRUPOS -->
 
   <div id="vista-grupos-sim">
-
     <div class="sim-controles">
-
       <button class="btn btn-verde" onclick="simularFaseGrupos()">▶ Simular Fase de Grupos</button>
-
       <button class="btn btn-rojo" onclick="resetTodo()">↺ Reiniciar Todo</button>
-
       <button onclick="limpiarBD()" style="padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;background:linear-gradient(135deg,#6a0dad,#9b30ff);color:white;">🗑️ Limpiar BD</button>
-
       <span id="estado-grupos" class="fase-label"></span>
-
     </div>
-
-    <div class="grupos-sim-grid" id="grupos-sim-container">
-
-      <div class="loading">Presiona "Simular Fase de Grupos" para comenzar con los 48 equipos</div>
-
-    </div>
-
+    <div class="grupos-sim-grid" id="grupos-sim-container"><div class="loading">Presiona "Simular Fase de Grupos" para comenzar</div></div>
   </div>
-
-
-
-  <!-- ELIMINACIÓN DIRECTA -->
 
   <div id="vista-eliminacion" style="display:none;">
-
     <div class="sim-controles">
-
       <button class="btn btn-verde" onclick="simularFase()">▶ Simular siguiente fase</button>
-
       <button class="btn btn-oro" onclick="simularTodo()">⚡ Simular todo el torneo</button>
-
       <button class="btn btn-rojo" onclick="resetSimulador()">↺ Reiniciar eliminación</button>
-
-      <button class="btn btn-rojo" onclick="limpiarBD()" style="background:linear-gradient(135deg,#6a0dad,#9b30ff);">🗑️ Limpiar BD y reiniciar</button>
-
       <span class="fase-label" id="fase-actual">OCTAVOS DE FINAL</span>
-
     </div>
-
-    <div class="eventos-box" id="eventos-log">
-
-      <div class="eventos-titulo">EVENTOS DEL PARTIDO</div>
-
-      <div id="eventos-lista"></div>
-
-    </div>
-
+    <div class="eventos-box" id="eventos-log"><div class="eventos-titulo">EVENTOS DEL PARTIDO</div><div id="eventos-lista"></div></div>
     <div class="bracket" id="bracket"></div>
-
   </div>
-
 </section>
-
-
-
-<!-- ══════════════ REPORTES ══════════════ -->
 
 <section id="sec-reportes" class="seccion">
-
   <div class="seccion-titulo">Reportes Finales</div>
-
   <div id="campeon-box" style="display:none;" class="campeon-banner">
-
     <div class="campeon-trofeo">🏆</div>
-
     <div class="campeon-label">Campeón del Mundo</div>
-
     <div class="campeon-nombre" id="campeon-nombre">—</div>
-
   </div>
-
   <div class="reportes-grid">
-
     <div class="reporte-card">
-
       <div class="reporte-header">⚽ Goleadores (Pichichi)</div>
-
       <div class="podio" id="podio-goleadores"><div class="loading">Cargando...</div></div>
-
     </div>
-
     <div class="reporte-card">
-
       <div class="reporte-header">🟨 Tarjetas por jugador</div>
-
       <div class="podio" id="podio-tarjetas"><div class="loading">Cargando...</div></div>
-
     </div>
-
     <div class="reporte-card">
-
       <div class="reporte-header">🏟️ Estadios más usados</div>
-
       <div class="podio" id="podio-estadios"><div class="loading">Cargando...</div></div>
-
     </div>
-
     <div class="reporte-card">
-
       <div class="reporte-header">🌎 Goles por país</div>
-
       <div class="podio" id="podio-paises"><div class="loading">Cargando...</div></div>
-
     </div>
-
   </div>
-
 </section>
 
+<div id="modal-equipo" class="modal-overlay">
+  <div class="modal-content">
+    <h2 id="modal-equipo-titulo">Nuevo Equipo</h2>
+    <input type="hidden" id="eq-id">
+    
+    <div class="form-group">
+      <label>Nombre del País</label>
+      <input type="text" id="eq-pais" placeholder="Ej: Guatemala">
+    </div>
+    <div class="form-group">
+      <label>Grupo (Letra)</label>
+      <input type="text" id="eq-grupo" placeholder="Ej: A">
+    </div>
+    <div class="form-group">
+      <label>ID Grupo (Numérico)</label>
+      <input type="number" id="eq-idgrupo" placeholder="Ej: 1">
+    </div>
 
+    <div class="modal-actions">
+      <button class="btn btn-rojo" onclick="cerrarModalEquipo()">Cancelar</button>
+      <button class="btn btn-verde" onclick="guardarEquipo()">Guardar</button>
+    </div>
+  </div>
+</div>
 
 <div id="toast"></div>
 
-
-
 <script>
-
 const API = 'http://localhost:8080/api';
-
 let _equipos=[], _jugadores=[], _estadios=[], _partidos=[], _goles=[], _tarjetas=[], _posiciones=[];
 
-
-
-// Simulador eliminación
-
-const FASES = ['DIECISEISAVOS','OCTAVOS DE FINAL','CUARTOS DE FINAL','SEMIFINAL','FINAL'];
-
+let FASES = ['DIECISEISAVOS','OCTAVOS DE FINAL','CUARTOS DE FINAL','SEMIFINAL','FINAL'];
 let faseIdx=0, rondas=[], campeón=null;
-
-
-
-// Simulador grupos
-
-let gruposSimulados = {}; // { 'A': [{pais, pj, pg, pe, pp, gf, gc, pts}] }
-
-let gruposSimulado = false;
-
-
-
-// ══ NAVEGACIÓN ══
+let gruposSimulados = {}, gruposSimulado = false;
 
 function mostrar(id, btn) {
-
   document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));
-
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-
   document.getElementById('sec-'+id).classList.add('activa');
-
   btn.classList.add('active');
-
   if(id==='equipos')   renderEquipos();
-
   if(id==='jugadores') renderJugadores();
-
-  if(id==='estadios')      renderEstadios();
-
+  if(id==='estadios')  renderEstadios();
   if(id==='entrenadores') renderEntrenadores();
-
   if(id==='grupos')    renderGrupos();
-
   if(id==='partidos')  renderPartidos();
-
   if(id==='simulador') renderBracket();
-
   if(id==='reportes')  renderReportes();
-
 }
-
-
 
 function irAFase(vista) {
-
   document.getElementById('vista-grupos-sim').style.display = vista==='grupos-sim' ? 'block' : 'none';
-
   document.getElementById('vista-eliminacion').style.display = vista==='eliminacion' ? 'block' : 'none';
-
 }
-
-
 
 function actualizarProgreso() {
-
-  // Resetear 2-6 (grupos siempre verde si simulado)
-
-  for(let i=2;i<=6;i++){
-
-    const el=document.getElementById('prog-'+i);
-
-    if(el){ el.style.background='rgba(255,255,255,0.03)'; el.style.color='var(--gris)'; }
-
-  }
-
-  if(gruposSimulado){
-
-    document.getElementById('prog-1').style.background='rgba(45,198,83,0.2)';
-
-    document.getElementById('prog-1').style.color='var(--verde)';
-
-  }
-
-  // Marcar fases completadas (faseIdx indica cuántas rondas se jugaron)
-
-  for(let i=0;i<faseIdx&&i<5;i++){
-
-    const el=document.getElementById('prog-'+(i+2));
-
-    if(el){ el.style.background='rgba(255,214,10,0.2)'; el.style.color='var(--oro)'; }
-
-  }
-
-  if(campeón){
-
-    const el=document.getElementById('prog-6');
-
-    if(el){ el.style.background='rgba(255,214,10,0.35)'; el.style.color='var(--oro)'; }
-
-  }
-
+  for(let i=2;i<=6;i++){ const el=document.getElementById('prog-'+i); if(el){ el.style.background='rgba(255,255,255,0.03)'; el.style.color='var(--gris)'; } }
+  if(gruposSimulado){ document.getElementById('prog-1').style.background='rgba(45,198,83,0.2)'; document.getElementById('prog-1').style.color='var(--verde)'; }
+  for(let i=0;i<faseIdx&&i<5;i++){ const el=document.getElementById('prog-'+(i+2)); if(el){ el.style.background='rgba(255,214,10,0.2)'; el.style.color='var(--oro)'; } }
+  if(campeón){ const el=document.getElementById('prog-6'); if(el){ el.style.background='rgba(255,214,10,0.35)'; el.style.color='var(--oro)'; } }
 }
-
-
-
-// ══ FETCH ══
 
 async function get(ruta) {
-
-  try {
-
-    const r = await fetch(API+ruta);
-
-    if(!r.ok) throw new Error('HTTP '+r.status);
-
-    return await r.json();
-
-  } catch(e) { toast('Error: '+ruta, true); return []; }
-
+  try { const r = await fetch(API+ruta); if(!r.ok) throw new Error('HTTP '+r.status); return await r.json(); } 
+  catch(e) { toast('Error: '+ruta, true); return []; }
 }
-
-
 
 function toast(msg, err=false) {
-
   const t=document.getElementById('toast');
-
   t.textContent=msg; t.className='show'+(err?' error':'');
-
   setTimeout(()=>t.className='',3200);
-
 }
-
-
-
-// ══ DASHBOARD ══
 
 async function cargarDashboard() {
-
   [_equipos,_jugadores,_estadios,_partidos,_goles,_tarjetas,_posiciones] = await Promise.all([
-
-    get('/equipos'),get('/jugadores'),get('/estadios'),
-
-    get('/partidos'),get('/goles'),get('/tarjetas'),get('/posiciones')
-
+    get('/equipos'),get('/jugadores'),get('/estadios'),get('/partidos'),get('/goles'),get('/tarjetas'),get('/posiciones')
   ]);
-
   document.getElementById('cnt-equipos').textContent   = _equipos.length;
-
   document.getElementById('cnt-jugadores').textContent = _jugadores.length;
-
   document.getElementById('cnt-estadios').textContent  = _estadios.length;
-
   document.getElementById('cnt-partidos').textContent  = _partidos.length;
-
   document.getElementById('cnt-goles').textContent     = _goles.length;
-
   document.getElementById('cnt-tarjetas').textContent  = _tarjetas.length;
-
   document.getElementById('ultima-act').textContent    = new Date().toLocaleString('es-GT');
-
 }
 
-
-
-// ══ EQUIPOS ══
-
+// ══ EQUIPOS Y CRUD COMPLETO ══
 function renderEquipos() {
+  const tb = document.getElementById('tb-equipos');
+  if(!_equipos.length){ tb.innerHTML='<tr><td colspan="4" class="loading">Sin datos</td></tr>'; return; }
+  
+  const arr = [..._equipos];
+  for(let i=0; i<arr.length-1; i++)
+    for(let j=0; j<arr.length-1-i; j++)
+      if((arr[j].grupo||'') > (arr[j+1].grupo||'')) [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
 
-  const tb=document.getElementById('tb-equipos');
-
-  if(!_equipos.length){tb.innerHTML='<tr><td colspan="3" class="loading">Sin datos</td></tr>';return;}
-
-  // Ordenar por grupo — algoritmo burbuja
-
-  const arr=[..._equipos];
-
-  for(let i=0;i<arr.length-1;i++)
-
-    for(let j=0;j<arr.length-1-i;j++)
-
-      if((arr[j].grupo||'')>(arr[j+1].grupo||''))[arr[j],arr[j+1]]=[arr[j+1],arr[j]];
-
-  tb.innerHTML=arr.map((e,i)=>{
-
-    const pais=e.pais||e.nombre||'—';
-
-    const grupo=e.grupo||'—';
-
-    return `<tr><td>${i+1}</td><td><strong>${pais}</strong></td><td><span class="badge badge-grupo">Grupo ${grupo}</span></td></tr>`;
-
+  tb.innerHTML = arr.map((e,i) => {
+    const pais = e.pais || e.nombre || '—';
+    const grupo = e.grupo || '—';
+    const id = e.idEquipo || e.idequipo;
+    const jsonStr = JSON.stringify(e).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+    
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${pais}</strong></td>
+      <td><span class="badge badge-grupo">Grupo ${grupo}</span></td>
+      <td style="text-align: right;">
+        <button class="btn btn-oro" style="padding: 6px 12px; font-size: 0.7rem;" onclick="editarEquipo('${jsonStr}')">✏️ Editar</button>
+        <button class="btn btn-rojo" style="padding: 6px 12px; font-size: 0.7rem;" onclick="eliminarEquipo(${id})">🗑️</button>
+      </td>
+    </tr>`;
   }).join('');
-
 }
 
+function abrirModalEquipo() {
+  document.getElementById('modal-equipo-titulo').innerText = 'NUEVO EQUIPO';
+  document.getElementById('eq-id').value = '';
+  document.getElementById('eq-pais').value = '';
+  document.getElementById('eq-grupo').value = '';
+  document.getElementById('eq-idgrupo').value = '';
+  document.getElementById('modal-equipo').style.display = 'flex';
+}
 
+function cerrarModalEquipo() { document.getElementById('modal-equipo').style.display = 'none'; }
 
-// ══ JUGADORES ══
+function editarEquipo(equipoJsonStr) {
+  const e = JSON.parse(equipoJsonStr);
+  document.getElementById('modal-equipo-titulo').innerText = 'EDITAR EQUIPO';
+  document.getElementById('eq-id').value = e.idEquipo || e.idequipo;
+  document.getElementById('eq-pais').value = e.pais || e.nombre;
+  document.getElementById('eq-grupo').value = e.grupo;
+  document.getElementById('eq-idgrupo').value = e.idGrupo || '';
+  document.getElementById('modal-equipo').style.display = 'flex';
+}
 
+async function guardarEquipo() {
+  const id = document.getElementById('eq-id').value;
+  const data = {
+    id_equipo: id ? parseInt(id) : 0,
+    pais: document.getElementById('eq-pais').value,
+    grupo: document.getElementById('eq-grupo').value,
+    id_grupo: parseInt(document.getElementById('eq-idgrupo').value) || 0
+  };
+  
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const r = await fetch(API+'/equipos', { method: method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+    if(r.ok) {
+      toast('Equipo guardado correctamente');
+      cerrarModalEquipo();
+      _equipos = await get('/equipos'); 
+      renderEquipos(); 
+      document.getElementById('cnt-equipos').textContent = _equipos.length; 
+    } else toast('Error al guardar en el servidor', true);
+  } catch(e) { toast('Error de conexión', true); }
+}
+
+async function eliminarEquipo(id) {
+  if(!confirm('¿Estás seguro de eliminar este equipo de la base de datos?')) return;
+  try {
+    const r = await fetch(API+'/equipos', { method: 'DELETE', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ id_equipo: id }) });
+    if(r.ok) {
+      toast('Equipo eliminado permanentemente');
+      _equipos = await get('/equipos'); 
+      renderEquipos(); 
+      document.getElementById('cnt-equipos').textContent = _equipos.length; 
+    } else toast('Error al eliminar. Revisa que el equipo no tenga jugadores asignados.', true);
+  } catch(e) { toast('Error de conexión', true); }
+}
+
+// ══ OTRAS SECCIONES ══
 function renderJugadores(){filtrarJugadores();}
-
 function filtrarJugadores(){
-
   const q=document.getElementById('buscar-jugador').value.toLowerCase();
-
   const tb=document.getElementById('tb-jugadores');
-
   const arr=_jugadores.filter(j=>j.nombre.toLowerCase().includes(q)||(j.paisEquipo||'').toLowerCase().includes(q));
-
   if(!arr.length){tb.innerHTML='<tr><td colspan="5" class="loading">Sin resultados</td></tr>';return;}
-
-  tb.innerHTML=arr.map((j,i)=>`<tr>
-
-    <td>${i+1}</td><td><strong>${j.nombre}</strong></td>
-
-    <td>${j.posicion}</td><td><strong>${j.dorsal}</strong></td><td>${j.paisEquipo}</td>
-
-  </tr>`).join('');
-
+  tb.innerHTML=arr.map((j,i)=>`<tr><td>${i+1}</td><td><strong>${j.nombre}</strong></td><td>${j.posicion}</td><td><strong>${j.dorsal}</strong></td><td>${j.paisEquipo}</td></tr>`).join('');
 }
-
-
-
-// ══ ESTADIOS ══
 
 function renderEstadios(){
-
   const tb=document.getElementById('tb-estadios');
-
   if(!_estadios.length){tb.innerHTML='<tr><td colspan="5" class="loading">Sin datos</td></tr>';return;}
-
-  // Ordenar por capacidad — algoritmo selección
-
   const arr=[..._estadios];
-
-  for(let i=0;i<arr.length-1;i++){
-
-    let max=i;
-
-    for(let j=i+1;j<arr.length;j++) if(arr[j].capacidad>arr[max].capacidad) max=j;
-
-    [arr[i],arr[max]]=[arr[max],arr[i]];
-
-  }
-
-  tb.innerHTML=arr.map((e,i)=>`<tr>
-
-    <td>${i+1}</td><td><strong>${e.nombre}</strong></td>
-
-    <td>${e.ciudad}</td><td>${e.pais}</td><td>${(e.capacidad||0).toLocaleString()}</td>
-
-  </tr>`).join('');
-
+  for(let i=0;i<arr.length-1;i++){ let max=i; for(let j=i+1;j<arr.length;j++) if(arr[j].capacidad>arr[max].capacidad) max=j; [arr[i],arr[max]]=[arr[max],arr[i]]; }
+  tb.innerHTML=arr.map((e,i)=>`<tr><td>${i+1}</td><td><strong>${e.nombre}</strong></td><td>${e.ciudad}</td><td>${e.pais}</td><td>${(e.capacidad||0).toLocaleString()}</td></tr>`).join('');
 }
-
-
-
-// ══ ENTRENADORES ══
 
 function renderEntrenadores(){
-
   const tb=document.getElementById('tb-entrenadores');
-
   fetch(API+'/entrenadores').then(r=>r.json()).then(data=>{
-
     if(!data.length){tb.innerHTML='<tr><td colspan="3" class="loading">Sin datos</td></tr>';return;}
-
-    // Ordenar alfabéticamente por nombre — algoritmo inserción
-
     const arr=[...data];
-
-    for(let i=1;i<arr.length;i++){
-
-      const key=arr[i]; let j=i-1;
-
-      while(j>=0 && (arr[j].nombre||'').localeCompare(key.nombre||'')>0){arr[j+1]=arr[j];j--;}
-
-      arr[j+1]=key;
-
-    }
-
-    tb.innerHTML=arr.map((e,i)=>`<tr>
-
-      <td>${i+1}</td>
-
-      <td><strong>${e.nombre||'—'}</strong></td>
-
-      <td>${e.paisEquipo||'—'}</td>
-
-    </tr>`).join('');
-
+    for(let i=1;i<arr.length;i++){ const key=arr[i]; let j=i-1; while(j>=0 && (arr[j].nombre||'').localeCompare(key.nombre||'')>0){arr[j+1]=arr[j];j--;} arr[j+1]=key; }
+    tb.innerHTML=arr.map((e,i)=>`<tr><td>${i+1}</td><td><strong>${e.nombre||'—'}</strong></td><td>${e.paisEquipo||'—'}</td></tr>`).join('');
   }).catch(()=>{tb.innerHTML='<tr><td colspan="3" class="loading">Error al cargar</td></tr>';});
-
 }
-
-
-
-// ══ GRUPOS (desde BD) ══
 
 function renderGrupos(){
-
   const cont=document.getElementById('grupos-container');
-
   if(!_posiciones.length){cont.innerHTML='<div class="loading">Sin datos de posiciones</div>';return;}
-
   const grupos={};
-
   _posiciones.forEach(p=>{
-
     const eq=_equipos.find(e=>e.idEquipo===p.idEquipo||e.id===p.idEquipo);
-
     const grp=(eq?eq.grupo:null)||p.grupo||'?';
-
-    if(!grupos[grp]) grupos[grp]=[];
-
-    grupos[grp].push(p);
-
+    if(!grupos[grp]) grupos[grp]=[]; grupos[grp].push(p);
   });
-
   Object.values(grupos).forEach(arr=>arr.sort((a,b)=>b.puntos-a.puntos||(b.gf-b.gc)-(a.gf-a.gc)));
-
   cont.innerHTML=Object.entries(grupos).sort().map(([g,pos])=>`
-
-    <div class="grupo-card">
-
-      <div class="grupo-header">GRUPO ${g}</div>
-
-      <table class="grupo-table">
-
-        <thead><tr><th>País</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts< /th></tr></thead>
-
-        <tbody>${pos.map((p,i)=>`<tr>
-
-          <td class="${i<2?'clasificado':''}">${p.pais}</td>
-
-          <td>${p.pj}</td><td>${p.pg}</td><td>${p.pe}</td><td>${p.pp}</td>
-
-          <td>${p.gf}</td><td>${p.gc}</td><td><strong>${p.puntos}</strong></td>
-
-        </tr>`).join('')}</tbody>
-
-      </table>
-
-    </div>`).join('');
-
+    <div class="grupo-card"><div class="grupo-header">GRUPO ${g}</div><table class="grupo-table">
+      <thead><tr><th>País</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr></thead>
+      <tbody>${pos.map((p,i)=>`<tr><td class="${i<2?'clasificado':''}">${p.pais}</td><td>${p.pj}</td><td>${p.pg}</td><td>${p.pe}</td><td>${p.pp}</td><td>${p.gf}</td><td>${p.gc}</td><td><strong>${p.puntos}</strong></td></tr>`).join('')}</tbody>
+    </table></div>`).join('');
 }
-
-
-
-// ══ PARTIDOS ══
 
 function renderPartidos(){
-
   const tb=document.getElementById('tb-partidos');
-
   if(!_partidos.length){tb.innerHTML='<tr><td colspan="7" class="loading">Sin datos</td></tr>';return;}
-
-  tb.innerHTML=_partidos.map(p=>`<tr>
-
-    <td>${p.idPartido}</td>
-
-    <td><span class="badge badge-fase">${p.fase}</span></td>
-
-    <td><strong>${p.local||'—'}</strong></td>
-
-    <td>${p.visitante||'—'}</td>
-
-    <td><strong>${p.golesLocales} — ${p.golesVisitantes}</strong></td>
-
-    <td>${p.fecha?p.fecha.substring(0,10):'—'}</td>
-
-    <td>${p.estadio||'—'}</td>
-
-  </tr>`).join('');
-
+  tb.innerHTML=_partidos.map(p=>`<tr><td>${p.idPartido}</td><td><span class="badge badge-fase">${p.fase}</span></td><td><strong>${p.local||'—'}</strong></td><td>${p.visitante||'—'}</td><td><strong>${p.golesLocales} — ${p.golesVisitantes}</strong></td><td>${p.fecha?p.fecha.substring(0,10):'—'}</td><td>${p.estadio||'—'}</td></tr>`).join('');
 }
 
-
-
-// ══════════════════════════════════════
-
-//  SIMULADOR — FASE DE GRUPOS (48 equipos)
-
-// ══════════════════════════════════════
-
-// ── Guardar posición de un equipo en BD ───────────────────────────────────
-
+// ══ SIMULADOR ══
 async function guardarPosicion(eq, stats) {
-
   const idEq = eq ? (eq.idEquipo || eq.id) : null;
-
   if (!idEq) return;
-
-  fetch(API + '/posiciones/actualizar', {
-
-    method: 'POST', headers: {'Content-Type':'application/json'},
-
-    body: JSON.stringify({
-
-      idEquipo: idEq,
-
-      puntos: stats.pts, pj: stats.pj, pg: stats.pg,
-
-      pe: stats.pe,      pp: stats.pp, gf: stats.gf, gc: stats.gc
-
-    })
-
-  }).catch(()=>{});
-
+  fetch(API + '/posiciones/actualizar', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ idEquipo: idEq, puntos: stats.pts, pj: stats.pj, pg: stats.pg, pe: stats.pe, pp: stats.pp, gf: stats.gf, gc: stats.gc }) }).catch(()=>{});
 }
-
-
-
-// ── Guardar alineaciones (11 titulares + 3 suplentes por equipo) ─────────────
-
-function guardarAlineaciones(idPartido, jugLocal, jugVis) {
-
-  if (!idPartido || idPartido === 0) return;
-
-  // Mezclar jugadores para selección aleatoria
-
-  const shuffleArr = arr => {
-
-    const a = [...arr];
-
-    for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-
-    return a;
-
-  };
-
-  const localShuf = shuffleArr(jugLocal);
-
-  const visShuf   = shuffleArr(jugVis);
-
-
-
-  // 11 titulares + hasta 4 suplentes por equipo
-
-  [...localShuf, ...visShuf].forEach((jug, idx) => {
-
-    const esTitular = (idx < 11) || (idx >= localShuf.length && idx < localShuf.length + 11);
-
-    const titular = idx < 11 || (idx >= localShuf.length && idx - localShuf.length < 11);
-
-    fetch(API + '/alineaciones', {
-
-      method: 'POST', headers: {'Content-Type':'application/json'},
-
-      body: JSON.stringify({idPartido, idJugador: jug.idJugador, titular})
-
-    }).catch(()=>{});
-
-  });
-
-
-
-  // 2-3 cambios por partido
-
-  const numCambios = Math.floor(Math.random() * 2) + 2;
-
-  for (let i = 0; i < numCambios; i++) {
-
-    const sale  = localShuf[Math.floor(Math.random() * Math.min(11, localShuf.length))];
-
-    const entra = localShuf[11 + Math.floor(Math.random() * Math.max(1, localShuf.length - 11))];
-
-    if (!sale || !entra || sale.idJugador === entra.idJugador) continue;
-
-    const minuto = 46 + Math.floor(Math.random() * 44);
-
-    fetch(API + '/cambios', {
-
-      method: 'POST', headers: {'Content-Type':'application/json'},
-
-      body: JSON.stringify({idPartido, jugadorSale: sale.idJugador, jugadorEntra: entra.idJugador, minuto})
-
-    }).catch(()=>{});
-
-  }
-
-}
-
-
-
-// ── Guardar goles de un partido en BD ────────────────────────────────────────
-
-function guardarGolesPartido(idPartido, gl, gv, local, visitante) {
-
-  if (!idPartido || idPartido === 0) return;
-
-  const jugLocal = _jugadores.filter(j => (j.paisEquipo||'') === local);
-
-  const jugVis   = _jugadores.filter(j => (j.paisEquipo||'') === visitante);
-
-
-
-  for (let i = 0; i < gl; i++) {
-
-    const jug = jugLocal[Math.floor(Math.random() * jugLocal.length)];
-
-    if (!jug) continue;
-
-    fetch(API + '/goles', {
-
-      method: 'POST', headers: {'Content-Type':'application/json'},
-
-      body: JSON.stringify({idPartido, idJugador: jug.idJugador, minuto: Math.floor(Math.random()*90)+1})
-
-    }).catch(()=>{});
-
-  }
-
-  for (let i = 0; i < gv; i++) {
-
-    const jug = jugVis[Math.floor(Math.random() * jugVis.length)];
-
-    if (!jug) continue;
-
-    fetch(API + '/goles', {
-
-      method: 'POST', headers: {'Content-Type':'application/json'},
-
-      body: JSON.stringify({idPartido, idJugador: jug.idJugador, minuto: Math.floor(Math.random()*90)+1})
-
-    }).catch(()=>{});
-
-  }
-
-}
-
-
-
-// ── Guardar tarjetas de un partido en BD ──────────────────────────────────────
-
-function guardarTarjetasPartido(idPartido, eventos, local, visitante) {
-
-  if (!idPartido || idPartido === 0) return;
-
-  eventos.forEach(ev => {
-
-    if (ev.icon !== '🟨' && ev.icon !== '🟥') return;
-
-    const tipo = ev.icon === '🟨' ? 'Amarilla' : 'Roja';
-
-    const jugadores = _jugadores.filter(j => (j.paisEquipo||'') === ev.eq);
-
-    if (!jugadores.length) return;
-
-    const jug = jugadores[Math.floor(Math.random() * jugadores.length)];
-
-    fetch(API + '/tarjetas', {
-
-      method: 'POST', headers: {'Content-Type':'application/json'},
-
-      body: JSON.stringify({idPartido, idJugador: jug.idJugador, tipo, minuto: ev.min})
-
-    }).catch(()=>{});
-
-  });
-
-}
-
-
 
 function simularFaseGrupos() {
-
   if(!_equipos.length){toast('Carga los datos primero',true);return;}
-
-
-
-  // Agrupar los 48 equipos por su grupo real de la BD
-
   const agrupados={};
-
-  _equipos.forEach(e=>{
-
-    const pais=e.pais||e.nombre||'?';
-
-    const grp=e.grupo||'?';
-
-    if(!agrupados[grp]) agrupados[grp]=[];
-
-    agrupados[grp].push(pais);
-
-  });
-
-
-
+  _equipos.forEach(e=>{ const pais=e.pais||e.nombre||'?'; const grp=e.grupo||'?'; if(!agrupados[grp]) agrupados[grp]=[]; agrupados[grp].push(pais); });
   gruposSimulados={};
-
-
-
-  // Simular partidos dentro de cada grupo (round-robin: cada equipo vs los demás)
-
   Object.entries(agrupados).forEach(([grp, equipos])=>{
-
-    // Inicializar estadísticas
-
     const stats={};
-
     equipos.forEach(eq=>stats[eq]={pais:eq,pj:0,pg:0,pe:0,pp:0,gf:0,gc:0,pts:0});
-
-
-
-    // Cada equipo juega contra todos los demás del grupo
-
     for(let i=0;i<equipos.length;i++){
-
       for(let j=i+1;j<equipos.length;j++){
-
-        const local=equipos[i], vis=equipos[j];
-
-        const gl=Math.floor(Math.random()*4);
-
-        const gv=Math.floor(Math.random()*4);
-
-
-
-        stats[local].pj++; stats[vis].pj++;
-
-        stats[local].gf+=gl; stats[local].gc+=gv;
-
-        stats[vis].gf+=gv; stats[vis].gc+=gl;
-
-
-
-        if(gl>gv){
-
-          stats[local].pg++; stats[local].pts+=3;
-
-          stats[vis].pp++;
-
-        } else if(gl<gv){
-
-          stats[vis].pg++; stats[vis].pts+=3;
-
-          stats[local].pp++;
-
-        } else {
-
-          stats[local].pe++; stats[local].pts+=1;
-
-          stats[vis].pe++; stats[vis].pts+=1;
-
-        }
-
-
-
-        // Guardar partido en BD y sus goles/tarjetas
-
-        const eqLocal=_equipos.find(e=>(e.pais||e.nombre)===local);
-
-        const eqVis=_equipos.find(e=>(e.pais||e.nombre)===vis);
-
-        if(eqLocal&&eqVis){
-
-          const estAleatorio = _estadios.length > 0 ? (_estadios[Math.floor(Math.random()*_estadios.length)].idEstadio||1) : 1;
-
-          fetch(API+'/partidos',{
-
-            method:'POST', headers:{'Content-Type':'application/json'},
-
-            body:JSON.stringify({fase:'FASE DE GRUPOS',idLocal:eqLocal.idEquipo||eqLocal.id,idVisitante:eqVis.idEquipo||eqVis.id,golesL:gl,golesV:gv,idEstadio:estAleatorio})
-
-          }).catch(()=>{});
-
-        }
-
+        const local=equipos[i], vis=equipos[j], gl=Math.floor(Math.random()*4), gv=Math.floor(Math.random()*4);
+        stats[local].pj++; stats[vis].pj++; stats[local].gf+=gl; stats[local].gc+=gv; stats[vis].gf+=gv; stats[vis].gc+=gl;
+        if(gl>gv){ stats[local].pg++; stats[local].pts+=3; stats[vis].pp++; } else if(gl<gv){ stats[vis].pg++; stats[vis].pts+=3; stats[local].pp++; } else { stats[local].pe++; stats[local].pts+=1; stats[vis].pe++; stats[vis].pts+=1; }
+        const eqLocal=_equipos.find(e=>(e.pais||e.nombre)===local); const eqVis=_equipos.find(e=>(e.pais||e.nombre)===vis);
+        if(eqLocal&&eqVis){ fetch(API+'/partidos',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({fase:'FASE DE GRUPOS',idLocal:eqLocal.idEquipo||eqLocal.id,idVisitante:eqVis.idEquipo||eqVis.id,golesL:gl,golesV:gv,idEstadio:1}) }).catch(()=>{}); }
       }
-
     }
-
-
-
-    // Ordenar por puntos, luego diferencia de goles
-
-    gruposSimulados[grp]=Object.values(stats).sort((a,b)=>
-
-      b.pts-a.pts||(b.gf-b.gc)-(a.gf-a.gc)||b.gf-a.gf
-
-    );
-
+    gruposSimulados[grp]=Object.values(stats).sort((a,b)=>b.pts-a.pts||(b.gf-b.gc)-(a.gf-a.gc)||b.gf-a.gf);
   });
-
-
-
-  gruposSimulado=true;
-
-  renderGruposSim();
-
-
-
-  // Guardar posiciones en BD
-
-  Object.entries(gruposSimulados).forEach(([grp, equipos]) => {
-
-    equipos.forEach(stats => {
-
-      const eq = _equipos.find(e => (e.pais||e.nombre) === stats.pais);
-
-      guardarPosicion(eq, stats);
-
-    });
-
-  });
-
-
-
+  gruposSimulado=true; renderGruposSim();
+  Object.entries(gruposSimulados).forEach(([grp, equipos]) => { equipos.forEach(stats => { const eq = _equipos.find(e => (e.pais||e.nombre) === stats.pais); guardarPosicion(eq, stats); }); });
   document.getElementById('estado-grupos').textContent='¡Fase de grupos completada!';
-
-  // Avanzar automáticamente a eliminación directa después de 2 segundos
-
-  setTimeout(() => {
-
-    irAFase('eliminacion');
-
-    // Reiniciar eliminación con los 32 clasificados
-
-    faseIdx = 0; rondas = []; campeón = null;
-
-    document.getElementById('fase-actual').textContent = FASES[0];
-
-    document.getElementById('eventos-log').style.display = 'none';
-
-    iniciarRonda0(); // arma los 16 partidos con los 32 clasificados
-
-    renderBracket();
-
-    actualizarProgreso();
-
-    const primeros = Object.keys(gruposSimulados).length * 2;
-
-    toast('✅ ' + primeros + ' clasificados + 8 mejores terceros = 32 equipos en Dieciseisavos!');
-
-  }, 2000);
-
+  setTimeout(() => { irAFase('eliminacion'); faseIdx = 0; rondas = []; campeón = null; document.getElementById('fase-actual').textContent = FASES[0]; iniciarRonda0(); renderBracket(); actualizarProgreso(); toast('✅ Equipos clasificados a la fase de eliminación!'); }, 2000);
 }
-
-
 
 function renderGruposSim(){
-
   const cont=document.getElementById('grupos-sim-container');
-
   if(!gruposSimulado){cont.innerHTML='<div class="loading">Presiona "Simular Fase de Grupos" para comenzar</div>';return;}
-
   cont.innerHTML=Object.entries(gruposSimulados).sort().map(([grp,equipos])=>`
-
-    <div class="grupo-sim-card">
-
-      <div class="grupo-sim-header">GRUPO ${grp}</div>
-
-      <table class="grupo-sim-table">
-
-        <thead><tr><th>País</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr></thead>
-
-        <tbody>${equipos.map((e,i)=>`<tr>
-
-          <td class="${i<2?'eq-clasificado':'eq-eliminado'}">${i<2?'✔ ':''}${e.pais}</td>
-
-          <td>${e.pj}</td><td>${e.pg}</td><td>${e.pe}</td><td>${e.pp}</td>
-
-          <td>${e.gf}</td><td>${e.gc}</td><td><strong>${e.pts}</strong></td>
-
-        </tr>`).join('')}</tbody>
-
-      </table>
-
-    </div>`).join('');
-
+    <div class="grupo-sim-card"><div class="grupo-sim-header">GRUPO ${grp}</div><table class="grupo-sim-table">
+      <thead><tr><th>País</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr></thead>
+      <tbody>${equipos.map((e,i)=>`<tr><td class="${i<2?'eq-clasificado':'eq-eliminado'}">${i<2?'✔ ':''}${e.pais}</td><td>${e.pj}</td><td>${e.pg}</td><td>${e.pe}</td><td>${e.pp}</td><td>${e.gf}</td><td>${e.gc}</td><td><strong>${e.pts}</strong></td></tr>`).join('')}</tbody>
+    </table></div>`).join('');
 }
-
-
-
-// ── Limpiar toda la BD y reiniciar simulación ────────────────────────────────
 
 async function limpiarBD() {
-
-  if(!confirm('¿Seguro que quieres borrar todos los partidos, goles, tarjetas, alineaciones, cambios y posiciones?')) return;
-
+  if(!confirm('¿Seguro que quieres borrar todos los partidos, goles y estadísticas?')) return;
   try {
-
     await fetch(API+'/limpiar', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
-
     _goles=[]; _tarjetas=[]; _partidos=[]; _posiciones=[];
-
-    document.getElementById('cnt-goles').textContent='0';
-
-    document.getElementById('cnt-tarjetas').textContent='0';
-
-    document.getElementById('cnt-partidos').textContent='0';
-
-    resetTodo();
-
-    toast('🗑️ BD limpiada — listo para simular de nuevo');
-
-  } catch(e) {
-
-    toast('Error al limpiar: '+e.message, true);
-
-  }
-
+    document.getElementById('cnt-goles').textContent='0'; document.getElementById('cnt-tarjetas').textContent='0'; document.getElementById('cnt-partidos').textContent='0';
+    resetTodo(); toast('🗑️ BD limpiada — listo para simular de nuevo');
+  } catch(e) { toast('Error al limpiar: '+e.message, true); }
 }
 
-
-
-function resetTodo(){
-
-  gruposSimulados={}; gruposSimulado=false;
-
-  faseIdx=0; rondas=[]; campeón=null;
-
-  document.getElementById('estado-grupos').textContent='';
-
-  document.getElementById('fase-actual').textContent=FASES[0];
-
-  document.getElementById('eventos-log').style.display='none';
-
-  renderGruposSim();
-
-  renderBracket();
-
-  irAFase('grupos-sim');
-
-  actualizarProgreso();
-
-}
-
-
-
-// ══════════════════════════════════════
-
-//  SIMULADOR — ELIMINACIÓN DIRECTA
-
-// ══════════════════════════════════════
+function resetTodo(){ gruposSimulados={}; gruposSimulado=false; faseIdx=0; rondas=[]; campeón=null; document.getElementById('estado-grupos').textContent=''; document.getElementById('fase-actual').textContent=FASES[0]; document.getElementById('eventos-log').style.display='none'; renderGruposSim(); renderBracket(); irAFase('grupos-sim'); actualizarProgreso(); }
 
 function equiposParaEliminacion(){
-
   let clasificados = [];
-
-
-
   if(gruposSimulado && Object.keys(gruposSimulados).length > 0){
-
-    // 2 primeros de cada grupo = 24 equipos
-
-    Object.values(gruposSimulados).forEach(arr => {
-
-      if(arr[0]) clasificados.push(arr[0].pais);
-
-      if(arr[1]) clasificados.push(arr[1].pais);
-
-    });
-
-    // 8 mejores terceros = 8 equipos → total 32
-
-    const terceros = [];
-
-    Object.values(gruposSimulados).forEach(arr => {
-
-      if(arr[2]) terceros.push(arr[2]);
-
-    });
-
+    Object.values(gruposSimulados).forEach(arr => { if(arr[0]) clasificados.push(arr[0].pais); if(arr[1]) clasificados.push(arr[1].pais); });
+    const terceros = []; Object.values(gruposSimulados).forEach(arr => { if(arr[2]) terceros.push(arr[2]); });
     terceros.sort((a,b)=>b.pts-a.pts||(b.gf-b.gc)-(a.gf-a.gc)||b.gf-a.gf);
-
     terceros.slice(0,8).forEach(t=>clasificados.push(t.pais));
-
   }
-
-
-
-  // Si no hay suficientes, completar con equipos de la BD
-
   if(clasificados.length < 32){
-
-    const extras = _equipos
-
-      .map(e => e.pais || e.nombre || '—')
-
-      .filter(p => !clasificados.includes(p));
-
-    for(let i=extras.length-1;i>0;i--){
-
-      const j=Math.floor(Math.random()*(i+1));
-
-      [extras[i],extras[j]]=[extras[j],extras[i]];
-
-    }
-
+    const extras = _equipos.map(e => e.pais || e.nombre || '—').filter(p => !clasificados.includes(p));
+    for(let i=extras.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [extras[i],extras[j]]=[extras[j],extras[i]]; }
     while(clasificados.length < 32 && extras.length > 0) clasificados.push(extras.shift());
-
   }
-
-
-
   if(clasificados.length > 32) clasificados = clasificados.slice(0,32);
-
-
-
-  // Mezclar para sorteo aleatorio del bracket
-
-  for(let i=clasificados.length-1;i>0;i--){
-
-    const j=Math.floor(Math.random()*(i+1));
-
-    [clasificados[i],clasificados[j]]=[clasificados[j],clasificados[i]];
-
-  }
-
+  for(let i=clasificados.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [clasificados[i],clasificados[j]]=[clasificados[j],clasificados[i]]; }
   return clasificados;
-
 }
 
-
-
-function simGol(){return Math.floor(Math.random()*4);}
-
-
-
-function generarEventos(local,visitante,gl,gv){
-
-  const eventos=[]; const minutos=new Set();
-
-
-
-  const minAleatorio = () => {
-
-    let m; do { m=Math.floor(Math.random()*90)+1; } while(minutos.has(m));
-
-    minutos.add(m); return m;
-
-  };
-
-
-
-  // ⚽ Goles reales del marcador — primero se asignan correctamente
-
-  for(let i=0;i<gl;i++) eventos.push({min:minAleatorio(), icon:'⚽', eq:local});
-
-  for(let i=0;i<gv;i++) eventos.push({min:minAleatorio(), icon:'⚽', eq:visitante});
-
-
-
-  // 🟨🟥🤕 Eventos adicionales aleatorios (tarjetas y lesiones)
-
-  const extras = Math.floor(Math.random()*4);
-
-  for(let i=0;i<extras;i++){
-
-    const eq = Math.random()<0.5 ? local : visitante;
-
-    const tipo = Math.random();
-
-    if(tipo<0.55)      eventos.push({min:minAleatorio(), icon:'🟨', eq});
-
-    else if(tipo<0.8)  eventos.push({min:minAleatorio(), icon:'🟥', eq});
-
-    else               eventos.push({min:minAleatorio(), icon:'🤕', eq});
-
-  }
-
-
-
-  return eventos.sort((a,b)=>a.min-b.min);
-
-}
-
-
-
-function mostrarEventos(eventos, local, visitante, gl, gv){
-
-  const box=document.getElementById('eventos-log');
-
-  box.style.display='block';
-
-  document.getElementById('eventos-lista').innerHTML=
-
-    eventos.map(ev=>
-
-      `<span style="margin-right:10px;font-size:0.8rem;">
-
-        <strong style="color:var(--gris)">${ev.min}'</strong> ${ev.icon} ${ev.eq}
-
-      </span>`
-
-    ).join('');
-
-}
-
-
-
-function iniciarRonda0(){
-
-  const eq = equiposParaEliminacion(); // exactamente 32
-
-  rondas = [[]];
-
-  // Armar 16 partidos de la Ronda de 16
-
-  for(let i=0; i<eq.length; i+=2){
-
-    rondas[0].push({
-
-      local:    eq[i]   || '—',
-
-      visitante:eq[i+1] || '—',
-
-      golesL:null, golesV:null, ganador:null
-
-    });
-
-  }
-
-}
-
-
+function iniciarRonda0(){ const eq = equiposParaEliminacion(); rondas = [[]]; for(let i=0; i<eq.length; i+=2) rondas[0].push({ local: eq[i]||'—', visitante:eq[i+1]||'—', golesL:null, golesV:null, ganador:null }); }
 
 function simularFase(){
-
   if(faseIdx===0&&rondas.length===0) iniciarRonda0();
-
   if(faseIdx>=FASES.length){toast('El torneo ya finalizó');return;}
-
-  const rondaActual=rondas[faseIdx];
-
-  if(!rondaActual){toast('Sin partidos');return;}
-
-
-
+  const rondaActual=rondas[faseIdx]; if(!rondaActual){toast('Sin partidos');return;}
   let ultimosEventos=[];
-
   rondaActual.forEach(m=>{
-
     if(m.ganador) return;
-
-    let gl=simGol(),gv=simGol();
-
-    if(gl===gv){gl===0?gl++:gv--;}
-
-    m.golesL=gl; m.golesV=gv;
-
-    m.ganador=gl>gv?m.local:m.visitante;
-
-    ultimosEventos=generarEventos(m.local,m.visitante,gl,gv);    // Guardar partido + goles + tarjetas + alineaciones + cambios en BD
-
-    const eqL=_equipos.find(e=>(e.pais||e.nombre)===m.local);
-
-    const eqV=_equipos.find(e=>(e.pais||e.nombre)===m.visitante);
-
-    const jugL = _jugadores.filter(j=>(j.paisEquipo||'')===m.local);
-
-    const jugV = _jugadores.filter(j=>(j.paisEquipo||'')===m.visitante);
-
-    if(eqL&&eqV){
-
-      fetch(API+'/partidos',{method:'POST',headers:{'Content-Type':'application/json'},
-
-        body:JSON.stringify({fase:FASES[faseIdx],idLocal:eqL.idEquipo||eqL.id,idVisitante:eqV.idEquipo||eqV.id,golesL:gl,golesV:gv,
-
-          idEstadio: _estadios.length > 0 ? (_estadios[Math.floor(Math.random()*_estadios.length)].idEstadio||1) : 1})
-
-      }).then(r=>r.json()).then(data=>{
-
-        const idPartido = data.idPartido || 0;
-
-        if(idPartido > 0){
-
-          guardarGolesPartido(idPartido, gl, gv, m.local, m.visitante);
-
-          guardarTarjetasPartido(idPartido, ultimosEventos, m.local, m.visitante);
-
-          guardarAlineaciones(idPartido, jugL, jugV);
-
-        }
-
-      }).catch(()=>{});
-
-    }
-
+    let gl=Math.floor(Math.random()*4),gv=Math.floor(Math.random()*4); if(gl===gv){gl===0?gl++:gv--;}
+    m.golesL=gl; m.golesV=gv; m.ganador=gl>gv?m.local:m.visitante;
+    const eqL=_equipos.find(e=>(e.pais||e.nombre)===m.local); const eqV=_equipos.find(e=>(e.pais||e.nombre)===m.visitante);
+    if(eqL&&eqV){ fetch(API+'/partidos',{method:'POST',headers:{'Content-Type':'application/json'}, body:JSON.stringify({fase:FASES[faseIdx],idLocal:eqL.idEquipo||eqL.id,idVisitante:eqV.idEquipo||eqV.id,golesL:gl,golesV:gv,idEstadio:1}) }).catch(()=>{}); }
   });
-
-
-
-  // Mostrar eventos del último partido con marcador real
-
-  const ultimoM = rondaActual[rondaActual.length-1];
-
-  mostrarEventos(ultimosEventos, ultimoM.local, ultimoM.visitante, ultimoM.golesL, ultimoM.golesV);
-
   const ganadores=rondaActual.map(m=>m.ganador);
-
   faseIdx++;
-
-
-
-  if(ganadores.length===1){
-
-    campeón=ganadores[0];
-
-    document.getElementById('fase-actual').textContent='🏆 CAMPEÓN: '+campeón;
-
-    toast('¡'+campeón+' es el Campeón del Mundo! 🏆');
-
-  } else {
-
+  if(ganadores.length===1){ campeón=ganadores[0]; document.getElementById('fase-actual').textContent='🏆 CAMPEÓN: '+campeón; toast('¡'+campeón+' es el Campeón del Mundo! 🏆'); } 
+  else {
     document.getElementById('fase-actual').textContent=FASES[faseIdx]||'—';
-
-    const nuevaRonda=[];
-
-    for(let i=0;i<ganadores.length;i+=2)
-
-      nuevaRonda.push({local:ganadores[i],visitante:ganadores[i+1]||'—',golesL:null,golesV:null,ganador:null});
-
+    const nuevaRonda=[]; for(let i=0;i<ganadores.length;i+=2) nuevaRonda.push({local:ganadores[i],visitante:ganadores[i+1]||'—',golesL:null,golesV:null,ganador:null});
     rondas.push(nuevaRonda);
-
   }
-
-  renderBracket();
-
-  actualizarProgreso();
-
+  renderBracket(); actualizarProgreso();
 }
 
-
-
-function simularTodo(){
-
-  resetSimulador();
-
-  iniciarRonda0();
-
-  while(faseIdx<FASES.length&&!campeón) simularFase();
-
-  // Recargar datos de BD para que reportes estén actualizados
-
-  setTimeout(async ()=>{
-
-    _goles     = await get('/goles');
-
-    _tarjetas  = await get('/tarjetas');
-
-    _partidos  = await get('/partidos');
-
-    _posiciones= await get('/posiciones');
-
-    document.getElementById('cnt-goles').textContent    = _goles.length;
-
-    document.getElementById('cnt-tarjetas').textContent = _tarjetas.length;
-
-    document.getElementById('cnt-partidos').textContent = _partidos.length;
-
-    toast('✅ Datos actualizados — revisa Reportes');
-
-  }, 1500);
-
-}
-
-
-
-function resetSimulador(){
-
-  faseIdx=0;rondas=[];campeón=null;
-
-  document.getElementById('fase-actual').textContent=FASES[0];
-
-  document.getElementById('eventos-log').style.display='none';
-
-  renderBracket();
-
-}
-
-
+function simularTodo(){ resetSimulador(); iniciarRonda0(); while(faseIdx<FASES.length&&!campeón) simularFase(); setTimeout(async ()=>{ _goles = await get('/goles'); _tarjetas = await get('/tarjetas'); _partidos = await get('/partidos'); _posiciones= await get('/posiciones'); document.getElementById('cnt-goles').textContent = _goles.length; document.getElementById('cnt-tarjetas').textContent = _tarjetas.length; document.getElementById('cnt-partidos').textContent = _partidos.length; toast('✅ Datos actualizados — revisa Reportes'); }, 1500); }
+function resetSimulador(){ faseIdx=0;rondas=[];campeón=null; document.getElementById('fase-actual').textContent=FASES[0]; document.getElementById('eventos-log').style.display='none'; renderBracket(); }
 
 function renderBracket(){
-
   const cont=document.getElementById('bracket');
-
-  if(!rondas.length){
-
-    cont.innerHTML=`<div style="padding:40px;color:var(--gris);font-size:0.88rem;">
-
-      Primero simula la <strong style="color:var(--verde)">Fase de Grupos</strong> y luego vuelve aquí para la eliminación directa.
-
-    </div>`;
-
-    return;
-
-  }
-
+  if(!rondas.length){ cont.innerHTML=`<div style="padding:40px;color:var(--gris);font-size:0.88rem;">Primero simula la Fase de Grupos.</div>`; return; }
   cont.innerHTML=rondas.map((ronda,ri)=>`
-
-    <div class="ronda">
-
-      <div class="ronda-titulo">${FASES[ri]||'—'}</div>
-
-      <div class="ronda-partidos">
-
-        ${ronda.map(m=>`
-
-          <div class="match-card">
-
-            <div class="match-equipo ${m.ganador===m.local?'ganador':m.ganador?'perdedor':''}">
-
-              <span>${m.local}</span>
-
-              ${m.golesL!==null?`<span class="gol-badge">${m.golesL}</span>`:''}
-
-            </div>
-
-            <div class="match-equipo ${m.ganador===m.visitante?'ganador':m.ganador?'perdedor':''}">
-
-              <span>${m.visitante}</span>
-
-              ${m.golesV!==null?`<span class="gol-badge">${m.golesV}</span>`:''}
-
-            </div>
-
-          </div>`).join('')}
-
-      </div>
-
-    </div>`).join('');
-
+    <div class="ronda"><div class="ronda-titulo">${FASES[ri]||'—'}</div><div class="ronda-partidos">
+      ${ronda.map(m=>`
+        <div class="match-card">
+          <div class="match-equipo ${m.ganador===m.local?'ganador':m.ganador?'perdedor':''}"><span>${m.local}</span>${m.golesL!==null?`<span class="gol-badge">${m.golesL}</span>`:''}</div>
+          <div class="match-equipo ${m.ganador===m.visitante?'ganador':m.ganador?'perdedor':''}"><span>${m.visitante}</span>${m.golesV!==null?`<span class="gol-badge">${m.golesV}</span>`:''}</div>
+        </div>`).join('')}
+    </div></div>`).join('');
 }
-
-
 
 // ══ REPORTES ══
-
 async function renderReportes(){
-
-  // Recargar datos frescos de la BD
-
-  _goles     = await get('/goles');
-
-  _tarjetas  = await get('/tarjetas');
-
-  _partidos  = await get('/partidos');
-
-
-
-  if(campeón){
-
-    document.getElementById('campeon-box').style.display='block';
-
-    document.getElementById('campeon-nombre').textContent=campeón;
-
-  }
-
-  const contGoles={};
-
-  _goles.forEach(g=>{const k=g.jugador||('Jugador #'+g.idJugador);contGoles[k]=(contGoles[k]||0)+1;});
-
+  _goles = await get('/goles'); _tarjetas = await get('/tarjetas'); _partidos = await get('/partidos');
+  if(campeón){ document.getElementById('campeon-box').style.display='block'; document.getElementById('campeon-nombre').textContent=campeón; }
+  
+  const contGoles={}; _goles.forEach(g=>{const k=g.jugador||('Jugador #'+g.idJugador);contGoles[k]=(contGoles[k]||0)+1;});
   renderPodio('podio-goleadores',Object.entries(contGoles).sort((a,b)=>b[1]-a[1]).slice(0,10),'gol(es)');
 
-
-
-  const contTarj={};
-
-  _tarjetas.forEach(t=>{const k=t.jugador||('Jugador #'+t.idJugador);contTarj[k]=(contTarj[k]||0)+1;});
-
+  const contTarj={}; _tarjetas.forEach(t=>{const k=t.jugador||('Jugador #'+t.idJugador);contTarj[k]=(contTarj[k]||0)+1;});
   renderPodio('podio-tarjetas',Object.entries(contTarj).sort((a,b)=>b[1]-a[1]).slice(0,10),'tarjeta(s)');
 
-
-
-  const contEst={};
-
-  _partidos.forEach(p=>{if(p.estadio)contEst[p.estadio]=(contEst[p.estadio]||0)+1;});
-
+  const contEst={}; _partidos.forEach(p=>{if(p.estadio)contEst[p.estadio]=(contEst[p.estadio]||0)+1;});
   renderPodio('podio-estadios',Object.entries(contEst).sort((a,b)=>b[1]-a[1]).slice(0,5),'partido(s)');
 
-
-
-  const contPais={};
-
-  _goles.forEach(g=>{
-
-    const jug=_jugadores.find(j=>j.idJugador===g.idJugador);
-
-    const pais=jug?jug.paisEquipo:'Desconocido';
-
-    contPais[pais]=(contPais[pais]||0)+1;
-
-  });
-
+  const contPais={}; _goles.forEach(g=>{ const jug=_jugadores.find(j=>j.idJugador===g.idJugador); const pais=jug?jug.paisEquipo:'Desconocido'; contPais[pais]=(contPais[pais]||0)+1; });
   renderPodio('podio-paises',Object.entries(contPais).sort((a,b)=>b[1]-a[1]).slice(0,8),'gol(es)');
-
 }
-
-
 
 function renderPodio(id,data,unidad){
-
   const cont=document.getElementById(id);
-
   if(!data.length){cont.innerHTML='<div class="loading">Sin datos</div>';return;}
-
   const ico={0:'🥇',1:'🥈',2:'🥉'};
-
-  cont.innerHTML=data.map(([nombre,val],i)=>`
-
-    <div class="podio-item">
-
-      <div class="podio-pos ${i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':''}">${ico[i]||(i+1)}</div>
-
-      <div class="podio-nombre">${nombre}</div>
-
-      <div class="podio-val">${val} <small style="font-size:0.62rem;color:var(--gris)">${unidad}</small></div>
-
-    </div>`).join('');
-
+  cont.innerHTML=data.map(([nombre,val],i)=>`<div class="podio-item"><div class="podio-pos ${i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':''}">${ico[i]||(i+1)}</div><div class="podio-nombre">${nombre}</div><div class="podio-val">${val} <small style="font-size:0.62rem;color:var(--gris)">${unidad}</small></div></div>`).join('');
 }
 
-
-
-// ══ INICIO ══
-
 window.addEventListener('DOMContentLoaded', cargarDashboard);
-
 </script>
-
 </body>
-
 </html>

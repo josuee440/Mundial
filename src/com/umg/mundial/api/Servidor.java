@@ -14,12 +14,47 @@ public class Servidor {
     public static void iniciar() throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-        // ── EQUIPOS ───────────────────────────────────────────────────────────
+        // ── EQUIPOS (CRUD COMPLETO) ──────────────────────────────────────────
         server.createContext("/api/equipos", exchange -> {
             setCors(exchange);
-            if ("OPTIONS".equals(exchange.getRequestMethod())) { exchange.sendResponseHeaders(204, -1); return; }
-            if ("GET".equals(exchange.getRequestMethod())) {
-                responder(exchange, Json.equiposToJson(new EquipoDAO().listar()));
+            String method = exchange.getRequestMethod();
+            if ("OPTIONS".equals(method)) { exchange.sendResponseHeaders(204, -1); return; }
+            
+            EquipoDAO dao = new EquipoDAO();
+
+            // LECTURA (READ)
+            if ("GET".equals(method)) {
+                responder(exchange, Json.equiposToJson(dao.listar()));
+            } 
+            // CREAR Y ACTUALIZAR (CREATE / UPDATE)
+            else if ("POST".equals(method) || "PUT".equals(method)) {
+                String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                try {
+                    int id = extraerInt(body, "id_equipo"); // Vendrá en 0 si es nuevo
+                    String pais = extraerString(body, "pais");
+                    String grupo = extraerString(body, "grupo");
+                    int idGrupo = extraerInt(body, "id_grupo");
+
+                    com.umg.mundial.model.Equipo e = new com.umg.mundial.model.Equipo();
+                    e.setIdequipo(id);
+                    e.setPais(pais);
+                    e.setGrupo(grupo);
+                    e.setIdGrupo(idGrupo > 0 ? idGrupo : null);
+
+                    boolean exito = (id > 0) ? dao.actualizar(e) : dao.insertar(e);
+
+                    if (exito) responder(exchange, Json.ok("Equipo guardado correctamente"));
+                    else responder(exchange, Json.error("Error al guardar equipo en BD"));
+                } catch (Exception ex) {
+                    responder(exchange, Json.error(ex.getMessage()));
+                }
+            } 
+            // ELIMINAR (DELETE)
+            else if ("DELETE".equals(method)) {
+                String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                int id = extraerInt(body, "id_equipo");
+                if (dao.eliminar(id)) responder(exchange, Json.ok("Equipo eliminado"));
+                else responder(exchange, Json.error("Error al eliminar equipo"));
             }
         });
 
@@ -71,8 +106,6 @@ public class Servidor {
                 // Leer el cuerpo JSON enviado desde el simulador
                 String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                 try {
-                    // Parsear manualmente los campos del JSON
-                    // Formato esperado: {"fase":"OCTAVOS","idLocal":1,"idVisitante":2,"golesL":2,"golesV":1}
                     String fase      = extraerString(body, "fase");
                     int idLocal      = extraerInt(body, "idLocal");
                     int idVisitante  = extraerInt(body, "idVisitante");
@@ -172,7 +205,7 @@ public class Servidor {
                     int pp       = extraerInt(body, "pp");
                     int gf       = extraerInt(body, "gf");
                     int gc       = extraerInt(body, "gc");
-                    // UPSERT: actualizar si existe, insertar si no
+                    
                     String check = "SELECT COUNT(*) FROM posiciones WHERE id_equipo=?";
                     try (java.sql.Connection con = com.umg.mundial.util.Conexion.getConexion();
                          java.sql.PreparedStatement ps = con.prepareStatement(check)) {
@@ -194,8 +227,6 @@ public class Servidor {
                 } catch (Exception e) { responder(exchange, Json.error(e.getMessage())); }
             }
         });
-
-
 
         // ── ALINEACIONES ──────────────────────────────────────────────────────
         server.createContext("/api/alineaciones", exchange -> {
@@ -258,13 +289,12 @@ public class Servidor {
             }
         });
 
-        // ── LIMPIAR BD (borra datos simulados para reiniciar) ─────────────────
+        // ── LIMPIAR BD ────────────────────────────────────────────────────────
         server.createContext("/api/limpiar", exchange -> {
             setCors(exchange);
             if ("OPTIONS".equals(exchange.getRequestMethod())) { exchange.sendResponseHeaders(204, -1); return; }
             if ("POST".equals(exchange.getRequestMethod())) {
                 try (java.sql.Connection con = com.umg.mundial.util.Conexion.getConexion()) {
-                    // Borrar en orden para respetar las FK
                     String[] tablas = {"goles","tarjetas","alineaciones","cambios","posiciones","partidos"};
                     for (String tabla : tablas) {
                         con.prepareStatement("DELETE FROM " + tabla).executeUpdate();
@@ -308,7 +338,6 @@ public class Servidor {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    /** Envía la respuesta JSON con código 200 */
     private static void responder(HttpExchange ex, String json) throws IOException {
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
         ex.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
@@ -318,14 +347,12 @@ public class Servidor {
         }
     }
 
-    /** Agrega cabeceras CORS para que el navegador no bloquee las peticiones */
     private static void setCors(HttpExchange ex) {
         ex.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         ex.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         ex.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
     }
 
-    /** Extrae un valor String de un JSON simple: {"clave":"valor"} */
     private static String extraerString(String json, String clave) {
         String buscar = "\"" + clave + "\"";
         int idx = json.indexOf(buscar);
@@ -335,7 +362,6 @@ public class Servidor {
         return json.substring(ini, fin);
     }
 
-    /** Extrae un valor int de un JSON simple: {"clave":123} */
     private static int extraerInt(String json, String clave) {
         String buscar = "\"" + clave + "\"";
         int idx = json.indexOf(buscar);
