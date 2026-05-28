@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estadísticas - Mundial_Fut_2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Mundial Fut 2026</div>
+  </header>
+
+  <section id="sec-estadisticas" class="seccion activa">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
+      <button class="btn btn-gris" onclick="mostrar('dashboard')">Volver al Dashboard</button>
+      <div class="seccion-titulo" style="margin-bottom: 0;">Premios Finales y Disciplina</div>
+    </div>
+
+    <div id="campeon-box" style="display:none;" class="campeon-banner">
+      <div class="campeon-label">Campeón del Mundo</div>
+      <div class="campeon-nombre" id="campeon-nombre">—</div>
+    </div>
+    
+    <div class="reportes-grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); margin-bottom: 40px;">
+      <div class="reporte-card"><div class="reporte-header" style="font-size: 1.6rem; padding: 20px;">Bota de Oro (Pichichi)</div><div class="podio" id="podio-goleadores" style="padding: 20px;"></div></div>
+      <div class="reporte-card"><div class="reporte-header" style="font-size: 1.6rem; padding: 20px;">Guante de Oro (Menos Goles)</div><div class="podio" id="podio-porteros" style="padding: 20px;"></div></div>
+    </div>
+
+    <div class="seccion-titulo" style="font-size: 2rem; margin-bottom: 20px;">Registro Disciplinario</div>
+    <div class="reportes-grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+      <div class="reporte-card"><div class="reporte-header">Tarjetas Amarillas</div><div class="podio" id="podio-amarillas"></div></div>
+      <div class="reporte-card"><div class="reporte-header">Tarjetas Rojas</div><div class="podio" id="podio-rojas"></div></div>
+    </div>
+
+  </section>
+
+  <div id="toast"></div>
+
+</body>
+</html>

@@ -11,25 +11,19 @@
 <body>
 
   <header>
-    <div class="logo-wrap">
-      <div class="logo-icon">⚽</div>
-      <div>
-        <div class="logo">Mundial_Fut UMG 2026</div>
-        <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
-      </div>
-    </div>
+    <div class="logo">Mundial Fut 2026</div>
   </header>
 
   <section id="sec-jugadores" class="seccion activa">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
       <div style="display: flex; align-items: center; gap: 15px;">
-        <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver al Dashboard</button>
+        <button class="btn btn-gris" onclick="mostrar('dashboard')">Volver al Dashboard</button>
         <div class="seccion-titulo" style="margin-bottom: 0;">Plantillas de Jugadores</div>
       </div>
-      <button class="btn btn-verde" onclick="abrirModalJugador()">+ Nuevo Jugador</button>
+      <button class="btn btn-verde" onclick="abrirModalJugador()">Nuevo Jugador</button>
     </div>
     <div style="margin-bottom: 24px;">
-      <input class="search-input" id="buscar-jugador" type="text" placeholder="🔍 Buscar jugador o país..." oninput="filtrarJugadores()" style="width: 100%; max-width: 400px;">
+      <input class="search-input" id="buscar-jugador" type="text" placeholder="Buscar jugador o país..." oninput="filtrarJugadores()" style="width: 100%; max-width: 400px;">
     </div>
     
     <div id="jugadores-container">
