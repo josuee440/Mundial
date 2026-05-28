@@ -1,48 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estadios - Mundial_Fut_2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/estilos.css">
-  <script src="js/app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadios - Mundial UMG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <header>
-    <div class="logo">Mundial Fut 2026</div>
-  </header>
+    <nav class="top-nav-bar">
+        <button class="btn-nav-back" onclick="mostrar('dashboard')">
+            <i class='bx bx-chevron-left'></i> Salir al Menú
+        </button>
+        <div class="nav-title">SEDES Y ESTADIOS</div>
+    </nav>
 
-  <section id="sec-estadios" class="seccion activa">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <button class="btn btn-gris" onclick="mostrar('dashboard')">Volver al Dashboard</button>
-        <div class="seccion-titulo" style="margin-bottom: 0;">Sedes y Estadios</div>
-      </div>
-    </div>
-    
-    <div id="grid-estadios" class="estadios-grid">
-      <div class="loading">Cargando estadios...</div>
+    <main class="main-plantillas">
+        <div class="tools-bar">
+            <div class="search-box">
+                <i class='bx bx-search'></i>
+                <input id="buscar-estadio" type="text" placeholder="Buscar por nombre o ciudad..." oninput="filtrarEstadios()">
+            </div>
+            <button class="btn-fichar" onclick="abrirModalEstadio()">
+                <i class='bx bx-buildings'></i> Registrar Estadio
+            </button>
+        </div>
+
+        <div id="estadios-container" class="stadiums-grid">
+            </div>
+    </main>
+
+    <div id="modal-estadio" class="fifa-modal-overlay">
+        <div class="fifa-modal-content">
+            <div class="modal-header">
+                <h2 id="modal-estadio-titulo">NUEVA SEDE</h2>
+                <button class="btn-close" onclick="cerrarModalEstadio()"><i class='bx bx-x'></i></button>
+            </div>
+            
+            <div class="modal-body">
+                <input type="hidden" id="est-id">
+                
+                <div class="form-group">
+                    <label>Nombre del Estadio</label>
+                    <input type="text" id="est-nombre" placeholder="Ej. Estadio Azteca">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Ciudad</label>
+                        <input type="text" id="est-ciudad" placeholder="Ej. Ciudad de México">
+                    </div>
+                    <div class="form-group half">
+                        <label>País</label>
+                        <input type="text" id="est-pais" placeholder="Ej. México">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Capacidad</label>
+                        <input type="number" id="est-capacidad" placeholder="87523">
+                    </div>
+                    <div class="form-group half">
+                        <label>URL de Imagen (Opcional)</label>
+                        <input type="text" id="est-imagen" placeholder="https://ejemplo.com/estadio.jpg">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="cerrarModalEstadio()">Cancelar</button>
+                <button class="btn-confirm" onclick="guardarEstadio()">Confirmar Sede</button>
+            </div>
+        </div>
     </div>
 
-    <div style="text-align: center; margin-top: 40px;">
-      <button class="btn btn-verde" style="font-size: 1.1rem; padding: 16px 32px;" onclick="abrirModalEstadio()">Registrar Nuevo Estadio</button>
-    </div>
-  </section>
+    <div id="toast"></div>
 
-  <div id="modal-estadio" class="modal-overlay">
-    <div class="modal-content">
-      <h2 id="modal-estadio-titulo">Nuevo Estadio</h2>
-      <input type="hidden" id="est-id">
-      <div class="form-group"><label>Nombre</label><input type="text" id="est-nombre"></div>
-      <div class="form-group"><label>Ciudad</label><input type="text" id="est-ciudad"></div>
-      <div class="form-group"><label>País</label><input type="text" id="est-pais"></div>
-      <div class="form-group"><label>Capacidad</label><input type="number" id="est-capacidad"></div>
-      <div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalEstadio()">Cancelar</button><button class="btn btn-verde" onclick="guardarEstadio()">Guardar</button></div>
-    </div>
-  </div>
-
-  <div id="toast"></div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,55 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulación - Mundial_Fut_2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/estilos.css">
-  <script src="js/app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador - Mundial UMG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="sim-body">
 
-  <header>
-    <div class="logo">Mundial Fut 2026</div>
-  </header>
+    <!-- Menú Superior Rápido -->
+    <nav class="top-nav-bar">
+        <button class="btn-nav-back" onclick="mostrar('dashboard')">
+            <i class='bx bx-chevron-left'></i> Salir al Menú
+        </button>
+        <div class="nav-title">SIMULADOR DEL TORNEO</div>
+    </nav>
 
-  <section id="sec-simulador" class="seccion activa" style="max-width: 100%; padding: 20px 40px;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <button class="btn btn-gris" onclick="mostrar('dashboard')">Volver al Dashboard</button>
-        <div class="seccion-titulo" style="margin-bottom: 0;">Motor de Simulación Oficial</div>
-      </div>
-    </div>
-    
-    <div style="display:flex;align-items:stretch;margin-bottom:22px;border-radius:10px;border:1px solid rgba(255,255,255,0.1); max-width: 800px; margin: 0 auto 22px auto;">
-      <div id="prog-1" style="flex:1;padding:12px 4px;text-align:center;font-family:Bebas Neue,sans-serif;font-size:1rem;background:rgba(60,172,59,0.1);color:var(--verde);cursor:pointer;" onclick="irAFase('grupos-sim')">FASE DE GRUPOS</div>
-      <div id="prog-2" style="flex:1;padding:12px 4px;text-align:center;font-family:Bebas Neue,sans-serif;font-size:1rem;background:rgba(0,0,0,0.02);color:var(--gris-oscuro);cursor:pointer;" onclick="irAFase('eliminacion')">LLAVES DE ELIMINACIÓN</div>
-    </div>
+    <main class="main-simulacion">
+        
+        <!-- VISTA: FASE DE GRUPOS -->
+        <div id="vista-grupos-sim" style="display: block;">
+            <div class="tools-bar">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <h2 style="font-family: var(--font-titles); font-size: 2rem; color: #FFF;">Fase de Grupos</h2>
+                    <span id="estado-grupos" style="color: #A2D148; font-weight: bold;"></span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-cancel" onclick="limpiarBD()">
+                        <i class='bx bx-trash'></i> Limpiar Datos
+                    </button>
+                    <button class="btn-fichar" onclick="simularFaseGrupos()">
+                        <i class='bx bx-play'></i> Simular Grupos
+                    </button>
+                    <button class="btn-fichar" id="btn-ir-llaves" style="display:none; background: #A2D148; color: #000;" onclick="irAFase('eliminacion')">
+                        Ver Llaves <i class='bx bx-right-arrow-alt'></i>
+                    </button>
+                </div>
+            </div>
 
-    <div id="vista-grupos-sim">
-      <div class="sim-controles" style="justify-content: center; margin-bottom: 40px;">
-        <button class="btn btn-verde" style="font-size: 1.1rem; padding: 16px 32px;" onclick="simularFaseGrupos()">Simular Fase Grupos</button>
-        <button class="btn btn-rojo" onclick="resetTodo()">Reiniciar Todo</button>
-        <button class="btn btn-gris" onclick="limpiarBD()">Limpiar BD</button>
-        <button id="btn-ir-llaves" class="btn btn-azul" style="display:none;" onclick="irAFase('eliminacion')">Ir a Llaves de Eliminación ➡</button>
-        <span id="estado-grupos" class="fase-label"></span>
-      </div>
-      <div class="grupos-sim-grid" id="grupos-sim-container" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
-        <div class="loading" style="grid-column: 1 / -1; font-size: 1.2rem;">Presiona "Simular Fase de Grupos" para comenzar el torneo...</div>
-      </div>
-    </div>
+            <div id="grupos-sim-container" class="stadiums-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                <div class="loading" style="grid-column: 1/-1; text-align: center; color: #FFF; padding: 40px; border: 1px dashed #2A3143; border-radius: 10px;">Presiona "Simular Grupos" para comenzar el torneo...</div>
+            </div>
+        </div>
 
-    <div id="vista-eliminacion" style="display:none;">
-      <div class="sim-controles" style="justify-content: center; background: var(--blanco); padding: 15px; border-radius: 12px; margin-bottom: 30px; border: 1px solid var(--gris-claro);">
-        <button class="btn btn-verde" style="font-size: 1.1rem; padding: 12px 24px;" onclick="simularFase()">Siguiente Fase</button>
-        <span class="fase-label" id="fase-actual" style="margin: 0 20px;">16AVOS DE FINAL</span>
-        <button class="btn btn-rojo" onclick="resetSimulador()">Reiniciar Llaves</button>
-      </div>
-      <div class="bracket" id="bracket"></div>
-    </div>
-  </section>
+        <!-- VISTA: FASE ELIMINATORIA (BRACKET) -->
+        <div id="vista-eliminacion" style="display: none;">
+            <div class="tools-bar">
+                <h2 style="font-family: var(--font-titles); font-size: 2rem; color: #FFF;">
+                    Fase Actual: <span id="fase-actual" style="color: var(--fifa-blue);">DIECISEISAVOS DE FINAL</span>
+                </h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-cancel" onclick="resetTodo()">
+                        <i class='bx bx-reset'></i> Reiniciar Todo
+                    </button>
+                    <button class="btn-fichar" onclick="simularFase()">
+                        <i class='bx bx-play-circle'></i> Simular Fase
+                    </button>
+                </div>
+            </div>
 
-  <div id="toast"></div>
+            <div id="bracket" class="bracket-container">
+                <!-- Se llena con JS -->
+            </div>
+        </div>
+    </main>
+
+    <div id="toast"></div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>

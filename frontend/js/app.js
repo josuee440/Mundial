@@ -32,8 +32,28 @@ function toast(m, e=false) { const t=document.getElementById('toast'); t.textCon
 // ── UTILIDAD BANDERAS REALES ──
 function getFlagHtml(p, isSmall = false) { 
   if(!p || p === '—') return '';
-  const d={'argentina':'ar','brasil':'br','méxico':'mx','mexico':'mx','estados unidos':'us','usa':'us','alemania':'de','francia':'fr','españa':'es','inglaterra':'gb-eng','italia':'it','uruguay':'uy','colombia':'co','chile':'cl','ecuador':'ec','perú':'pe','peru':'pe','venezuela':'ve','paraguay':'py','bolivia':'bo','canadá':'ca','canada':'ca','portugal':'pt','países bajos':'nl','paises bajos':'nl','holanda':'nl','bélgica':'be','belgica':'be','croacia':'hr','suiza':'ch','dinamarca':'dk','suecia':'se','polonia':'pl','japón':'jp','japon':'jp','corea del sur':'kr','corea':'kr','corea del norte':'kp','australia':'au','irán':'ir','iran':'ir','arabia saudita':'sa','senegal':'sn','ghana':'gh','camerún':'cm','camerun':'cm','marruecos':'ma','túnez':'tn','tunez':'tn','egipto':'eg','argelia':'dz','nigeria':'ng','guatemala':'gt','costa rica':'cr','honduras':'hn','el salvador':'sv','panamá':'pa','panama':'pa','congo':'cd','el congo':'cd','república democrática del congo':'cd','costa de marfil':'ci','sudáfrica':'za','sudafrica':'za','gales':'gb-wls','escocia':'gb-sct','grecia':'gr','serbia':'rs','bosnia':'ba','nueva zelanda':'nz','jamaica':'jm','qatar':'qa','catar':'qa','turquía':'tr','turquia':'tr','rusia':'ru','ucrania':'ua','mali':'ml','malí':'ml'}; 
-  const code = d[p.toLowerCase().trim()]; 
+  
+  // Normalizamos el texto: quitamos tildes/acentos, extra espacios y lo pasamos a minúsculas
+  const normalizedP = p.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, ' ');
+  
+  const d = {
+    'argentina':'ar','brasil':'br','mexico':'mx','estados unidos':'us','estados unidos de america':'us','usa':'us','eeuu':'us','ee.uu.':'us','alemania':'de',
+    'francia':'fr','espana':'es','inglaterra':'gb-eng','italia':'it','uruguay':'uy','colombia':'co','chile':'cl',
+    'ecuador':'ec','peru':'pe','venezuela':'ve','paraguay':'py','bolivia':'bo','canada':'ca',
+    'portugal':'pt','paises bajos':'nl','holanda':'nl','belgica':'be','croacia':'hr',
+    'suiza':'ch','dinamarca':'dk','suecia':'se','polonia':'pl','japon':'jp','corea del sur':'kr',
+    'corea':'kr','republica de corea':'kr','south korea':'kr','corea del norte':'kp','australia':'au','iran':'ir','arabia saudita':'sa',
+    'arabia saudi':'sa','senegal':'sn','ghana':'gh','camerun':'cm','marruecos':'ma','tunez':'tn',
+    'egipto':'eg','argelia':'dz','nigeria':'ng','guatemala':'gt','costa rica':'cr','honduras':'hn',
+    'el salvador':'sv','panama':'pa','congo':'cg','el congo':'cg','republica democratica del congo':'cd',
+    'rd congo':'cd','costa de marfil':'ci','sudafrica':'za','gales':'gb-wls',
+    'escocia':'gb-sct','grecia':'gr','serbia':'rs','bosnia':'ba','bosnia y herzegovina':'ba','bosnia-herzegovina':'ba',
+    'nueva zelanda':'nz','jamaica':'jm','qatar':'qa','catar':'qa','turquia':'tr','rusia':'ru',
+    'ucrania':'ua','mali':'ml','austria':'at','cabo verde':'cv','chequia':'cz','republica checa':'cz',
+    'curazao':'cw','haiti':'ht','irak':'iq','iraq':'iq','jordania':'jo',
+    'noruega':'no','uzbekistan':'uz'
+  };
+  const code = d[normalizedP]; 
   return code ? `<img src="https://flagcdn.com/w80/${code}.png" class="flag-img ${isSmall ? 'small' : ''}" alt="${p}">` : ''; 
 }
 
@@ -49,7 +69,7 @@ async function cargarDashboard() {
   // Auto-renderizar dependiendo de la página actual en la que nos encontremos
   if(document.getElementById('teams-grid')) renderEquipos();
   if(document.getElementById('jugadores-container')) renderJugadores();
-  if(document.getElementById('grid-estadios')) renderEstadios();
+  if(document.getElementById('estadios-container')) renderEstadios();
   if(document.getElementById('partidos-container')) renderPartidos();
   if(document.getElementById('bracket')) renderBracket();
   if(document.getElementById('podio-goleadores') || document.getElementById('campeon-box')) renderEstadisticas();
@@ -107,8 +127,12 @@ function seleccionarEquipo(id) {
   if (actionsContainer) {
       actionsContainer.style.display = 'flex';
       actionsContainer.innerHTML = `
-          <button class="btn btn-azul" onclick='editarEquipo(${JSON.stringify(e).replace(/'/g,"&apos;")})'>Editar</button>
-          <button class="btn btn-rojo" onclick="eliminarEquipo(${id}, true)">Eliminar</button>
+          <button class="btn-fichar" onclick='editarEquipo(${JSON.stringify(e).replace(/'/g,"&apos;")})'>
+              <i class='bx bxs-pencil'></i> Editar
+          </button>
+          <button class="btn-fichar" style="background: #E63946;" onclick="eliminarEquipo(${id}, true)">
+              <i class='bx bxs-trash'></i> Eliminar
+          </button>
       `;
   }
 }
@@ -181,29 +205,43 @@ async function guardarJugador(){ const id=document.getElementById('jug-id').valu
 async function eliminarJugador(id){ if(confirm('¿Eliminar jugador?')){ await fetch(API+'/jugadores',{method:'DELETE', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id_jugador:id})}); _jugadores=await get('/jugadores'); renderJugadores(); document.getElementById('cnt-jugadores').textContent=_jugadores.length; toast('Eliminado'); } }
 
 // ── CRUD ESTADIOS ──
-function renderEstadios() {
-  const grid = document.getElementById('grid-estadios'); 
-  if(!grid) return;
-  if(!_estadios.length){ grid.innerHTML='<div class="loading" style="grid-column: 1 / -1;">Sin estadios registrados</div>'; return; }
-  grid.innerHTML = _estadios.map((e,i) => `
-    <div class="estadio-card">
-      <div>
-        <div class="estadio-nombre">${e.nombre}</div>
-        <div class="estadio-ubicacion">${getFlagHtml(e.pais, true)} ${e.ciudad}, ${e.pais}</div>
-        <div class="estadio-capacidad">Capacidad: ${(e.capacidad||0).toLocaleString()}</div>
-      </div>
-      <div class="estadio-acciones">
-        <button class="btn btn-azul" style="padding:8px 16px;font-size:0.8rem;" onclick='editarEstadio(${JSON.stringify(e).replace(/'/g,"&apos;")})'>Editar</button>
-        <button class="btn btn-rojo" style="padding:8px 16px;font-size:0.8rem;" onclick="eliminarEstadio(${e.idEstadio||e.idestadio})">Eliminar</button>
+function renderEstadios() { filtrarEstadios(); }
+function filtrarEstadios() {
+  const buscador = document.getElementById('buscar-estadio');
+  const q = buscador ? buscador.value.toLowerCase() : '';
+  const cont = document.getElementById('estadios-container');
+  if(!cont) return;
+
+  const arr = _estadios.filter(e => e.nombre.toLowerCase().includes(q) || (e.ciudad||'').toLowerCase().includes(q) || (e.pais||'').toLowerCase().includes(q));
+
+  if(!arr.length){ cont.innerHTML='<div class="loading" style="grid-column: 1 / -1;">Sin resultados</div>'; return; }
+
+  cont.innerHTML = arr.map((e) => `
+    <div class="stadium-card">
+      <div class="stadium-bg" style="background-image: url('${e.imagen || 'https://images.unsplash.com/photo-1518605368461-1e1e1fd51b20?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}');"></div>
+      <div class="stadium-overlay">
+        <div class="stadium-capacity">${(e.capacidad||0).toLocaleString()} <i class='bx bx-user'></i></div>
+        <div class="stadium-info">
+          <div class="stadium-name">${e.nombre}</div>
+          <div class="stadium-location">${getFlagHtml(e.pais, true)} ${e.ciudad}, ${e.pais}</div>
+        </div>
+        <div class="stadium-actions">
+          <button class="btn-card-action btn-edit" onclick='editarEstadio(${JSON.stringify(e).replace(/'/g,"&apos;")})' title="Editar">
+            <i class='bx bxs-pencil'></i>
+          </button>
+          <button class="btn-card-action btn-delete" onclick="eliminarEstadio(${e.idEstadio||e.idestadio})" title="Eliminar">
+            <i class='bx bxs-trash'></i>
+          </button>
+        </div>
       </div>
     </div>
   `).join('');
 }
-function abrirModalEstadio() { document.getElementById('modal-estadio-titulo').innerText='NUEVO ESTADIO'; document.getElementById('est-id').value=''; document.getElementById('est-nombre').value=''; document.getElementById('est-ciudad').value=''; document.getElementById('est-pais').value=''; document.getElementById('est-capacidad').value=''; document.getElementById('modal-estadio').style.display='flex'; }
+function abrirModalEstadio() { document.getElementById('modal-estadio-titulo').innerText='NUEVA SEDE'; document.getElementById('est-id').value=''; document.getElementById('est-nombre').value=''; document.getElementById('est-ciudad').value=''; document.getElementById('est-pais').value=''; document.getElementById('est-capacidad').value=''; document.getElementById('est-imagen').value=''; document.getElementById('modal-estadio').style.display='flex'; }
 function cerrarModalEstadio() { document.getElementById('modal-estadio').style.display='none'; }
-function editarEstadio(e) { document.getElementById('modal-estadio-titulo').innerText='EDITAR ESTADIO'; document.getElementById('est-id').value=e.idEstadio||e.idestadio; document.getElementById('est-nombre').value=e.nombre; document.getElementById('est-ciudad').value=e.ciudad; document.getElementById('est-pais').value=e.pais; document.getElementById('est-capacidad').value=e.capacidad||''; document.getElementById('modal-estadio').style.display='flex'; }
-async function guardarEstadio() { const id=document.getElementById('est-id').value, data={ id_estadio:id?parseInt(id):0, nombre:document.getElementById('est-nombre').value, ciudad:document.getElementById('est-ciudad').value, pais:document.getElementById('est-pais').value, capacidad:parseInt(document.getElementById('est-capacidad').value)||0 }; try { await fetch(API+'/estadios', {method:id?'PUT':'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); cerrarModalEstadio(); _estadios=await get('/estadios'); renderEstadios(); document.getElementById('cnt-estadios').textContent=_estadios.length; toast('Estadio guardado'); } catch(e){} }
-async function eliminarEstadio(id) { if(confirm('¿Eliminar estadio?')){ await fetch(API+'/estadios', {method:'DELETE', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id_estadio:id})}); _estadios=await get('/estadios'); renderEstadios(); document.getElementById('cnt-estadios').textContent=_estadios.length; toast('Eliminado'); } }
+function editarEstadio(e) { document.getElementById('modal-estadio-titulo').innerText='EDITAR SEDE'; document.getElementById('est-id').value=e.idEstadio||e.idestadio; document.getElementById('est-nombre').value=e.nombre; document.getElementById('est-ciudad').value=e.ciudad; document.getElementById('est-pais').value=e.pais; document.getElementById('est-capacidad').value=e.capacidad||''; document.getElementById('est-imagen').value=e.imagen||''; document.getElementById('modal-estadio').style.display='flex'; }
+async function guardarEstadio() { const id=document.getElementById('est-id').value, data={ id_estadio:id?parseInt(id):0, nombre:document.getElementById('est-nombre').value, ciudad:document.getElementById('est-ciudad').value, pais:document.getElementById('est-pais').value, capacidad:parseInt(document.getElementById('est-capacidad').value)||0, imagen:document.getElementById('est-imagen').value }; try { await fetch(API+'/estadios', {method:id?'PUT':'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); cerrarModalEstadio(); _estadios=await get('/estadios'); renderEstadios(); if(document.getElementById('cnt-estadios')) document.getElementById('cnt-estadios').textContent=_estadios.length; toast('Sede guardada'); } catch(e){} }
+async function eliminarEstadio(id) { if(confirm('¿Eliminar sede?')){ await fetch(API+'/estadios', {method:'DELETE', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id_estadio:id})}); _estadios=await get('/estadios'); renderEstadios(); if(document.getElementById('cnt-estadios')) document.getElementById('cnt-estadios').textContent=_estadios.length; toast('Eliminada'); } }
 
 // ── VISTAS DE LECTURA ──
 function renderEntrenadores() { 
@@ -223,46 +261,88 @@ function renderGrupos() {
   Object.values(gs).forEach(a => a.sort((x,y) => y.puntos-x.puntos || (y.gf-y.gc)-(x.gf-x.gc))); 
   cont.innerHTML = Object.entries(gs).sort().map(([g,pos]) => `<div class="grupo-card"><div class="grupo-header">GRUPO ${g}</div><table class="grupo-table"><thead><tr><th>País</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr></thead><tbody>${pos.map((p,i)=>`<tr><td class="${i<2?'clasificado':''}">${getFlagHtml(p.pais, true)}${p.pais}</td><td>${p.pj}</td><td>${p.pg}</td><td>${p.pe}</td><td>${p.pp}</td><td>${p.gf}</td><td>${p.gc}</td><td><strong>${p.puntos}</strong></td></tr>`).join('')}</tbody></table></div>`).join(''); 
 }
-function renderPartidos() {
+
+// ── CRUD PARTIDOS ──
+let _filtroFase = '';
+function renderPartidos() { filtrarPartidos(); }
+function filtrarPorFase(fase, btn) {
+  _filtroFase = fase;
+  if (btn) {
+    document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  filtrarPartidos();
+}
+function filtrarPartidos() {
   const cont = document.getElementById('partidos-container');
   if (!cont) return;
-  if (!_partidos.length) { cont.innerHTML = '<div class="loading">No hay partidos registrados</div>'; return; }
-  
-  // Agrupar los partidos por fase
-  const porFase = {};
-  _partidos.forEach(p => {
-    const f = p.fase || 'Sin Fase';
-    if (!porFase[f]) porFase[f] = [];
-    porFase[f].push(p);
+
+  const buscador = document.getElementById('buscar-partido');
+  const q = buscador ? buscador.value.toLowerCase() : '';
+
+  let arr = _partidos.filter(p => {
+    const txt = ((p.local||'') + ' ' + (p.visitante||'') + ' ' + (p.fase||'') + ' ' + (p.estadio||'')).toLowerCase();
+    return txt.includes(q);
   });
 
-  // Orden para mostrar: primero grupos, luego eliminatorias
-  const ordenFases = ['FASE DE GRUPOS', 'DIECISEISAVOS DE FINAL', 'OCTAVOS DE FINAL', 'CUARTOS DE FINAL', 'SEMIFINAL', 'FINAL'];
-  const fasesOrdenadas = Object.keys(porFase).sort((a,b) => {
-    let ia = ordenFases.indexOf(a); let ib = ordenFases.indexOf(b);
-    if (ia === -1) ia = 99; if (ib === -1) ib = 99;
-    return ia - ib;
-  });
+  if (_filtroFase) {
+    if (_filtroFase === 'Final') {
+      arr = arr.filter(p => (p.fase||'').trim().toUpperCase() === 'FINAL');
+    } else {
+      arr = arr.filter(p => (p.fase||'').toLowerCase().includes(_filtroFase.toLowerCase()));
+    }
+  }
 
-  // Pintar el HTML
-  cont.innerHTML = fasesOrdenadas.map(fase => `
-    <div class="fase-section">
-      <div class="fase-header">${fase}</div>
-      <div class="partidos-grid">
-        ${porFase[fase].map(p => `
-          <div class="partido-card">
-            <div class="partido-id">Partido #${p.idPartido}</div>
-            <div class="partido-equipos">
-              <div class="pe-equipo ${p.golesLocales > p.golesVisitantes ? 'ganador' : ''}"><span class="pe-bandera">${getFlagHtml(p.local, true)} ${p.local||'—'}</span><span class="pe-goles">${p.golesLocales}</span></div>
-              <div class="pe-equipo ${p.golesVisitantes > p.golesLocales ? 'ganador' : ''}"><span class="pe-bandera">${getFlagHtml(p.visitante, true)} ${p.visitante||'—'}</span><span class="pe-goles">${p.golesVisitantes}</span></div>
+  if (!arr.length) { 
+    cont.innerHTML = '<div class="loading" style="grid-column: 1 / -1;">No hay partidos para mostrar</div>'; 
+    return; 
+  }
+
+  cont.innerHTML = arr.map(p => `
+    <div class="match-card">
+        <div class="match-header">
+            <span>${p.fase || 'Fase Desconocida'} • Partido #${p.idPartido || p.idpartido}</span>
+            <span class="match-status" style="color: ${p.golesLocales !== null ? 'var(--fifa-grey-main)' : '#A2D148'}">
+              ${p.golesLocales !== null ? 'FINALIZADO' : 'POR JUGAR'}
+            </span>
+        </div>
+        <div class="match-body">
+            <div class="match-team">
+                <div class="team-flag">${getFlagHtml(p.local, true) || '<i class="bx bx-shield"></i>'}</div>
+                <div class="team-name">${(p.local || 'TBD').substring(0,3).toUpperCase()}</div>
             </div>
-            <div class="partido-footer">${p.estadio||'—'}</div>
-          </div>
-        `).join('')}
-      </div>
+            <div class="match-center-score">
+                <div class="score-box">
+                    ${p.golesLocales !== null ? p.golesLocales : '-'} 
+                    <span class="vs">vs</span> 
+                    ${p.golesVisitantes !== null ? p.golesVisitantes : '-'}
+                </div>
+            </div>
+            <div class="match-team away">
+                <div class="team-flag">${getFlagHtml(p.visitante, true) || '<i class="bx bx-shield"></i>'}</div>
+                <div class="team-name">${(p.visitante || 'TBD').substring(0,3).toUpperCase()}</div>
+            </div>
+        </div>
+        <div class="match-footer">
+            <span><i class='bx bx-map'></i> ${p.estadio || 'Estadio por definir'}</span>
+        </div>
+        <div class="match-actions">
+            <button class="btn-card-action btn-edit" onclick='editarPartido(${JSON.stringify(p).replace(/'/g,"&apos;")})' title="Editar">
+                <i class='bx bxs-pencil'></i>
+            </button>
+            <button class="btn-card-action btn-delete" onclick="eliminarPartido(${p.idPartido || p.idpartido})" title="Eliminar">
+                <i class='bx bxs-trash'></i>
+            </button>
+        </div>
     </div>
   `).join('');
 }
+async function cargarSelectsPartido() { const loc=document.getElementById('partido-local'), vis=document.getElementById('partido-visitante'), est=document.getElementById('partido-estadio'); const eqHtml='<option value="">-- Selecciona Equipo --</option>'+_equipos.map(e=>`<option value="${e.idEquipo||e.idequipo}">${e.pais||e.nombre}</option>`).join(''); if(loc) loc.innerHTML=eqHtml; if(vis) vis.innerHTML=eqHtml; if(est) est.innerHTML='<option value="">-- Selecciona Sede --</option>'+_estadios.map(e=>`<option value="${e.idEstadio||e.idestadio}">${e.nombre}</option>`).join(''); }
+function abrirModalPartido() { cargarSelectsPartido(); document.getElementById('modal-partido-titulo').innerText='PROGRAMAR ENCUENTRO'; document.getElementById('partido-id').value=''; document.getElementById('partido-local').value=''; document.getElementById('partido-visitante').value=''; document.getElementById('partido-fase').value=''; document.getElementById('partido-estadio').value=''; document.getElementById('modal-partido').style.display='flex'; }
+function cerrarModalPartido() { document.getElementById('modal-partido').style.display='none'; }
+function editarPartido(p) { cargarSelectsPartido(); document.getElementById('modal-partido-titulo').innerText='EDITAR ENCUENTRO'; document.getElementById('partido-id').value=p.idPartido||p.idpartido; setTimeout(()=>{ const locEq=_equipos.find(x=>x.pais===p.local||x.nombre===p.local); if(locEq) document.getElementById('partido-local').value=locEq.idEquipo||locEq.idequipo; const visEq=_equipos.find(x=>x.pais===p.visitante||x.nombre===p.visitante); if(visEq) document.getElementById('partido-visitante').value=visEq.idEquipo||visEq.idequipo; const est=_estadios.find(x=>x.nombre===p.estadio); if(est) document.getElementById('partido-estadio').value=est.idEstadio||est.idestadio; document.getElementById('partido-fase').value=p.fase||''; }, 100); document.getElementById('modal-partido').style.display='flex'; }
+async function guardarPartido() { const id=document.getElementById('partido-id').value, data={ id_partido:id?parseInt(id):0, id_local:parseInt(document.getElementById('partido-local').value)||0, id_visitante:parseInt(document.getElementById('partido-visitante').value)||0, fase:document.getElementById('partido-fase').value, id_estadio:parseInt(document.getElementById('partido-estadio').value)||0 }; try { await fetch(API+'/partidos',{method:id?'PUT':'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); cerrarModalPartido(); _partidos=await get('/partidos'); renderPartidos(); if(document.getElementById('cnt-partidos')) document.getElementById('cnt-partidos').textContent=_partidos.length; toast('Partido guardado'); } catch(e){} }
+async function eliminarPartido(id) { if(confirm('¿Eliminar partido?')){ await fetch(API+'/partidos', {method:'DELETE', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id_partido:id})}); _partidos=await get('/partidos'); renderPartidos(); if(document.getElementById('cnt-partidos')) document.getElementById('cnt-partidos').textContent=_partidos.length; toast('Partido eliminado'); } }
 
 // ── SIMULADOR ──
 async function simularFaseGrupos() {
@@ -286,7 +366,7 @@ async function simularFaseGrupos() {
   }
 
   // ¡SOLUCIÓN! Volvemos a cargar los datos que se borraron y actualizamos el Dashboard.
-  [_partidos, _posiciones, _goles, _tarjetas] = await Promise.all([
+  ;[_partidos, _posiciones, _goles, _tarjetas] = await Promise.all([
     get('/partidos'), get('/posiciones'), get('/goles'), get('/tarjetas')
   ]);
   // Si estamos en el dashboard, actualizamos contadores
@@ -436,6 +516,6 @@ async function renderEstadisticas(){
   renderPodio('podio-rojas', Object.entries(cRo).sort((a,b)=>b[1]-a[1]), 'rojas');
 }
 
-function renderPodio(id,data,ud){ document.getElementById(id).innerHTML=data.length?data.map(([n,v],i)=>`<div class="podio-item"><div style="font-size:1.2rem;width:30px;color:var(--azul);font-weight:bold;">${i+1}.</div><div style="flex:1">${id==='podio-paises'?getFlagHtml(n, true):''}${n}</div><div class="podio-val">${v} <span style="font-size:0.6rem;color:var(--gris-oscuro)">${ud}</span></div></div>`).join(''):'<div class="loading">Sin datos suficientes</div>'; }
+function renderPodio(id,data,ud){ document.getElementById(id).innerHTML=data.length?data.map(([n,v],i)=>`<div class="podio-item" style="display:flex; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05); color:#FFF;"><div style="font-size:1.5rem;width:40px;color:var(--fifa-blue);font-family:var(--font-titles);">${i+1}.</div><div style="flex:1; font-weight:600;">${id==='podio-paises'?getFlagHtml(n, true):''}${n}</div><div class="podio-val" style="font-family:var(--font-titles); font-size:1.5rem; color:#A2D148;">${v} <span style="font-size:0.8rem;color:#A0A5B5;font-family:var(--font-main);">${ud}</span></div></div>`).join(''):'<div class="loading" style="color:#A0A5B5;">Sin datos suficientes</div>'; }
 
 window.addEventListener('DOMContentLoaded', cargarDashboard);
