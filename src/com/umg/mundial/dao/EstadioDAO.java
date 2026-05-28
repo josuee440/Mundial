@@ -6,9 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EstadioDAO {
+public class EstadioDAO implements CRUD<Estadio> {
     
     // ── LECTURA (READ) ──
+    @Override
     public List<Estadio> listar() {
         List<Estadio> lista = new ArrayList<>();
         // Columna corregida a nombre_estadios
@@ -34,6 +35,7 @@ public class EstadioDAO {
     }
 
     // ── CREAR (CREATE) ──
+    @Override
     public boolean insertar(Estadio e) {
         // Columna corregida a nombre_estadios
         String sql = "INSERT INTO estadios (nombre_estadios, ciudad, pais, capacidad) VALUES (?, ?, ?, ?)";
@@ -51,6 +53,7 @@ public class EstadioDAO {
     }
 
     // ── ACTUALIZAR (UPDATE) ──
+    @Override
     public boolean actualizar(Estadio e) {
         // Columna corregida a nombre_estadios
         String sql = "UPDATE estadios SET nombre_estadios=?, ciudad=?, pais=?, capacidad=? WHERE id_estadio=?";
@@ -69,6 +72,7 @@ public class EstadioDAO {
     }
 
     // ── ELIMINAR (DELETE) ──
+    @Override
     public boolean eliminar(int id) {
         String sql = "DELETE FROM estadios WHERE id_estadio=?";
         try (Connection con = Conexion.getConexion();

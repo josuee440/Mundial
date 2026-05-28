@@ -6,9 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EquipoDAO {
+public class EquipoDAO implements CRUD<Equipo> {
     
     // ── LECTURA (READ) ──
+    @Override
     public List<Equipo> listar() {
         List<Equipo> lista = new ArrayList<>();
         String sql = "SELECT id_equipo, pais, grupo, id_grupo FROM equipos"; 
@@ -32,6 +33,7 @@ public class EquipoDAO {
     }
 
     // ── CREAR (CREATE) ──
+    @Override
     public boolean insertar(Equipo e) {
         String sql = "INSERT INTO equipos (pais, grupo, id_grupo) VALUES (?, ?, ?)";
         try (Connection con = Conexion.getConexion();
@@ -48,6 +50,7 @@ public class EquipoDAO {
     }
 
     // ── ACTUALIZAR (UPDATE) ──
+    @Override
     public boolean actualizar(Equipo e) {
         String sql = "UPDATE equipos SET pais=?, grupo=?, id_grupo=? WHERE id_equipo=?";
         try (Connection con = Conexion.getConexion();
@@ -65,6 +68,7 @@ public class EquipoDAO {
     }
 
     // ── ELIMINAR (DELETE) ──
+    @Override
     public boolean eliminar(int id) {
         String sql = "DELETE FROM equipos WHERE id_equipo=?";
         try (Connection con = Conexion.getConexion();

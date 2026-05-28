@@ -6,9 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JugadorDAO {
+public class JugadorDAO implements CRUD<Jugador> {
     
     // ── LECTURA (READ) ──
+    @Override
     public List<Jugador> listar() {
         List<Jugador> lista = new ArrayList<>();
         // Hacemos JOIN con equipos para obtener el nombre del país del jugador
@@ -36,6 +37,7 @@ public class JugadorDAO {
     }
 
     // ── CREAR (CREATE) ──
+    @Override
     public boolean insertar(Jugador j) {
         String sql = "INSERT INTO jugadores (nombre, posicion, dorsal, id_equipo) VALUES (?, ?, ?, ?)";
         try (Connection con = Conexion.getConexion();
@@ -52,6 +54,7 @@ public class JugadorDAO {
     }
 
     // ── ACTUALIZAR (UPDATE) ──
+    @Override
     public boolean actualizar(Jugador j) {
         String sql = "UPDATE jugadores SET nombre=?, posicion=?, dorsal=?, id_equipo=? WHERE id_jugador=?";
         try (Connection con = Conexion.getConexion();
@@ -69,6 +72,7 @@ public class JugadorDAO {
     }
 
     // ── ELIMINAR (DELETE) ──
+    @Override
     public boolean eliminar(int id) {
         String sql = "DELETE FROM jugadores WHERE id_jugador=?";
         try (Connection con = Conexion.getConexion();

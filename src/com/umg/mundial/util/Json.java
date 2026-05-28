@@ -94,7 +94,7 @@ public class Json {
             sb.append(String.format(
                 "{\"idEntrenador\":%d,\"nombre\":\"%s\",\"idEquipo\":%d,\"paisEquipo\":\"%s\"}",
                 en.getIdEntrenador(),
-                esc(en.getNombreEntrenador()),
+                esc(en.getNombre()), // Usando el método heredado de Persona
                 idEquipo,
                 paisEquipo
             ));

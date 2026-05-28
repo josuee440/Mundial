@@ -21,7 +21,7 @@ public class EntrenadorDAO {
             while (rs.next()) {
                 Entrenador t = new Entrenador();
                 t.setIdEntrenador(rs.getInt("id_entrenador"));
-                t.setNombreEntrenador(rs.getString("nombre_entrenador"));
+                t.setNombre(rs.getString("nombre_entrenador")); // Usando el método heredado de Persona
 
                 // Llenamos el objeto Equipo relacionado
                 Equipo eq = new Equipo();
