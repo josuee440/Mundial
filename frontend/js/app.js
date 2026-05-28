@@ -46,52 +46,71 @@ async function cargarDashboard() {
   if(document.getElementById('cnt-estadios')) document.getElementById('cnt-estadios').textContent=_estadios.length; 
   if(document.getElementById('cnt-partidos')) document.getElementById('cnt-partidos').textContent=_partidos.length;
   
-  // Auto-renderizar si estamos en la página de equipos
-  if(document.getElementById('sec-equipos') && document.getElementById('sec-equipos').classList.contains('activa')) {
-    renderEquipos();
-  }
-  if(document.getElementById('sec-jugadores') && document.getElementById('sec-jugadores').classList.contains('activa')) {
-    renderJugadores();
-  }
-  if(document.getElementById('sec-estadios') && document.getElementById('sec-estadios').classList.contains('activa')) {
-    renderEstadios();
-  }
-  if(document.getElementById('sec-partidos') && document.getElementById('sec-partidos').classList.contains('activa')) {
-    renderPartidos();
-  }
-  if(document.getElementById('sec-simulador') && document.getElementById('sec-simulador').classList.contains('activa')) {
-    renderBracket();
-  }
-  if(document.getElementById('sec-estadisticas') && document.getElementById('sec-estadisticas').classList.contains('activa')) {
-    renderEstadisticas();
-  }
+  // Auto-renderizar dependiendo de la página actual en la que nos encontremos
+  if(document.getElementById('teams-grid')) renderEquipos();
+  if(document.getElementById('jugadores-container')) renderJugadores();
+  if(document.getElementById('grid-estadios')) renderEstadios();
+  if(document.getElementById('partidos-container')) renderPartidos();
+  if(document.getElementById('bracket')) renderBracket();
+  if(document.getElementById('podio-goleadores') || document.getElementById('campeon-box')) renderEstadisticas();
 }
 
 // ── CRUD EQUIPOS ──
 function renderEquipos() {
-  const grid = document.getElementById('grid-equipos'); 
-  if(!_equipos.length){ grid.innerHTML='<div class="loading" style="grid-column: 1 / -1;">Sin datos</div>'; return; }
+  const grid = document.getElementById('teams-grid'); 
+  if(!grid) return;
+  if(!_equipos.length){ grid.innerHTML='<div class="loading" style="grid-column: 1 / -1; padding: 20px;">Sin datos registrados</div>'; return; }
+  
   grid.innerHTML = _equipos.map(e => `
-    <div class="equipo-card" onclick="verDetalleEquipo(${e.idEquipo||e.idequipo})">
-      <div class="flag">${getFlagHtml(e.pais||e.nombre)}</div>
-      <div class="name">${e.pais||e.nombre}</div>
+    <div class="team-card" id="team-card-${e.idEquipo||e.idequipo}" onclick="seleccionarEquipo(${e.idEquipo||e.idequipo})">
+      ${getFlagHtml(e.pais||e.nombre)}
+      <span>${(e.pais||e.nombre).toUpperCase()}</span>
     </div>
   `).join('');
 }
-function verDetalleEquipo(id) {
+
+function seleccionarEquipo(id) {
   const e = _equipos.find(x => (x.idEquipo||x.idequipo) === id);
   if (!e) return;
-  const cont = document.getElementById('detalle-equipo-cont');
-  cont.innerHTML = `
-    <div class="flag">${getFlagHtml(e.pais||e.nombre)}</div>
-    <div class="name">${e.pais||e.nombre}</div>
-    <div class="info">Grupo ${e.grupo||'—'}</div>
-    <div class="detalle-acciones">
-      <button class="btn btn-azul" onclick='editarEquipo(${JSON.stringify(e).replace(/'/g,"&apos;")})'>Editar</button>
-      <button class="btn btn-rojo" onclick="eliminarEquipo(${e.idEquipo||e.idequipo}, true)">Eliminar</button>
-    </div>
-  `;
-  mostrar('equipo-detalle');
+
+  // Cambiar estado visual de la tarjeta clickeada
+  document.querySelectorAll('.team-card').forEach(card => card.classList.remove('active'));
+  const activeCard = document.getElementById(`team-card-${id}`);
+  if(activeCard) activeCard.classList.add('active');
+
+  // Actualizar Textos
+  document.getElementById('lbl-nombre-equipo').textContent = (e.pais||e.nombre).toUpperCase();
+  document.getElementById('lbl-desc-equipo').textContent = "Selección lista para competir en el torneo.";
+  
+  // Renderizar la bandera en grande
+  const escudoWrapper = document.getElementById('shield-wrapper');
+  if (escudoWrapper) {
+      escudoWrapper.innerHTML = getFlagHtml(e.pais||e.nombre);
+      const img = escudoWrapper.querySelector('img');
+      if (img) {
+          img.style.height = '180px';
+          img.style.width = 'auto';
+          img.style.boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
+          img.style.borderRadius = '10px';
+      }
+  }
+
+  // Actualizar estadísticas
+  const statsContainer = document.getElementById('stats-grid-container');
+  if (statsContainer) statsContainer.style.display = 'grid';
+  
+  document.getElementById('lbl-grupo').textContent = e.grupo || '—';
+  document.getElementById('lbl-entrenador').textContent = e.entrenador || 'Por definir'; 
+  
+  // Mostrar botones de acción
+  const actionsContainer = document.getElementById('team-actions');
+  if (actionsContainer) {
+      actionsContainer.style.display = 'flex';
+      actionsContainer.innerHTML = `
+          <button class="btn btn-azul" onclick='editarEquipo(${JSON.stringify(e).replace(/'/g,"&apos;")})'>Editar</button>
+          <button class="btn btn-rojo" onclick="eliminarEquipo(${id}, true)">Eliminar</button>
+      `;
+  }
 }
 function abrirModalEquipo() { document.getElementById('modal-equipo-titulo').innerText='NUEVO EQUIPO'; document.getElementById('eq-id').value=''; document.getElementById('eq-pais').value=''; document.getElementById('eq-grupo').value=''; document.getElementById('eq-idgrupo').value=''; document.getElementById('modal-equipo').style.display='flex'; }
 function cerrarModalEquipo() { document.getElementById('modal-equipo').style.display='none'; }

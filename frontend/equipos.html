@@ -5,48 +5,87 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Equipos - Mundial_Fut_2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="css/styles.css">
   <script src="js/app.js" defer></script>
 </head>
 <body>
 
-  <header>
-    <div class="logo">Mundial Fut 2026</div>
-  </header>
+  <!-- Botones de Navegación y Nuevo Equipo -->
+  <div style="position: absolute; top: 20px; left: 40px; right: 40px; display: flex; justify-content: space-between; z-index: 10;">
+      <button class="btn btn-gris" onclick="mostrar('dashboard')">← Volver al Dashboard</button>
+      <button class="btn btn-verde" onclick="abrirModalEquipo()">Nuevo Equipo</button>
+  </div>
 
-  <section id="sec-equipos" class="seccion activa">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <button class="btn btn-gris" onclick="mostrar('dashboard')">Volver al Dashboard</button>
-        <div class="seccion-titulo" style="margin-bottom: 0;">Selecciones Clasificadas</div>
-      </div>
-    </div>
+  <!-- Dentro de tu <main> o sección principal en equipos.html -->
+<section class="sec-seleccion-equipos">
     
-    <div id="grid-equipos" class="equipos-grid">
-      <div class="loading">Cargando...</div>
+    <!-- Encabezado estilo FIFA -->
+    <div class="fifa-header">
+        <h2>Elige tu Selección</h2>
     </div>
 
-    <div style="text-align: center; margin-top: 40px;">
-      <button class="btn btn-verde" style="font-size: 1.1rem; padding: 16px 32px;" onclick="abrirModalEquipo()">Crear Nueva Selección</button>
-    </div>
-  </section>
+    <!-- Contenedor Principal Dividido -->
+    <div class="split-container">
+        
+        <!-- PANEL IZQUIERDO: Grid de Equipos -->
+        <div class="panel-izquierdo" id="teams-grid">
+            <!-- Cargando equipos desde la BD... -->
+        </div>
 
-  <section id="sec-equipo-detalle" class="seccion">
-    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-      <button class="btn btn-gris" onclick="mostrar('equipos')">Volver a Equipos</button>
-      <div class="seccion-titulo" style="margin-bottom: 0;">Detalle de Selección</div>
-    </div>
-    <div class="detalle-equipo-wrap" id="detalle-equipo-cont"></div>
-  </section>
+        <!-- PANEL DERECHO: Detalles del Equipo -->
+        <div class="panel-derecho" id="team-details">
+            <!-- Fondo del mapa (marca de agua) -->
+            <div class="map-bg"></div>
+            
+            <div class="details-content">
+                <h3 class="details-title">SELECCIÓN NACIONAL</h3>
+                <p class="details-location">
+                    <i class='bx bx-map'></i> <span id="lbl-nombre-equipo">SELECCIONA UN EQUIPO</span>
+                </p>
 
+                <!-- Escudo/Carta Gigante -->
+                <div class="shield-wrapper" id="shield-wrapper">
+                    <div class="shield-placeholder" id="escudo-placeholder">
+                        <i class='bx bx-shield-alt-2'></i>
+                    </div>
+                </div>
+
+                <!-- Estadísticas / Info que antes iba en el modal -->
+                <div class="team-stats">
+                    <p id="lbl-desc-equipo">La información del equipo que selecciones aparecerá aquí. Podrás ver su director técnico, grupo y estadísticas clave para el mundial.</p>
+                    
+                    <div class="stats-grid" id="stats-grid-container" style="display: none;">
+                        <div class="stat-item">
+                            <span class="stat-label">GRUPO</span>
+                            <span class="stat-value" id="lbl-grupo">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">ENTRENADOR</span>
+                            <span class="stat-value" id="lbl-entrenador">-</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de Acción (Aparecen al seleccionar) -->
+                    <div id="team-actions" style="display: none; margin-top: 25px; gap: 10px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+  <!-- ===== MODAL EQUIPO ===== -->
   <div id="modal-equipo" class="modal-overlay">
     <div class="modal-content">
       <h2 id="modal-equipo-titulo">Nuevo Equipo</h2>
       <input type="hidden" id="eq-id">
       <div class="form-group"><label>País</label><input type="text" id="eq-pais"></div>
       <div class="form-group"><label>Grupo</label><input type="text" id="eq-grupo"></div>
-      <div class="form-group"><label>ID Grupo</label><input type="number" id="eq-idgrupo"></div>
-      <div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalEquipo()">Cancelar</button><button class="btn btn-verde" onclick="guardarEquipo()">Guardar</button></div>
+      <input type="hidden" id="eq-idgrupo">
+      <div class="modal-actions">
+          <button class="btn btn-rojo" onclick="cerrarModalEquipo()">Cancelar</button>
+          <button class="btn btn-verde" onclick="guardarEquipo()">Guardar</button>
+      </div>
     </div>
   </div>
 
