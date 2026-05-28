@@ -395,3 +395,306 @@ body {
     font-size: 1.5rem;
     letter-spacing: 1px;
 }
+
+/* --- NAVEGACIÓN SUPERIOR --- */
+.top-nav-bar {
+    background: #11141A;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    border-bottom: 2px solid var(--fifa-blue);
+}
+
+.btn-nav-back {
+    background: transparent;
+    border: none;
+    color: #FFF;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.btn-nav-back:hover { color: var(--fifa-blue); }
+
+.nav-title {
+    font-family: var(--font-titles);
+    color: #FFF;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+}
+
+/* --- SECCIÓN PLANTILLAS --- */
+.main-plantillas {
+    padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.tools-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.search-box {
+    position: relative;
+    width: 400px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    font-size: 1.2rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border-radius: 30px;
+    border: 1px solid #CCC;
+    background: #FFF;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.3s;
+}
+
+.search-box input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 112, 224, 0.2);
+    border-color: var(--fifa-blue);
+}
+
+.btn-fichar {
+    background: var(--fifa-blue);
+    color: #FFF;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-family: var(--font-main);
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 112, 224, 0.3);
+}
+
+.btn-fichar:hover {
+    background: #005bb5;
+    transform: translateY(-2px);
+}
+
+/* --- CUADRÍCULA DE CARTAS (ESTILO FUT) --- */
+.fut-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.fut-card {
+    background: linear-gradient(135deg, #1E232E 0%, #11141A 100%);
+    border-radius: 12px;
+    border: 1px solid #2A3143;
+    padding: 15px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* Brillo en el borde al hacer hover */
+.fut-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(0, 112, 224, 0.2) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.fut-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 15px 30px rgba(0, 112, 224, 0.3);
+    border-color: var(--fifa-blue);
+}
+
+.fut-card:hover::before { opacity: 1; }
+
+.card-top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 1;
+}
+
+.card-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-dorsal {
+    font-family: var(--font-titles);
+    font-size: 2.5rem;
+    color: #FFF;
+    line-height: 0.9;
+}
+
+.card-pos {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--fifa-blue);
+}
+
+.card-flag img {
+    width: 35px;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.card-portrait {
+    font-size: 6rem;
+    color: #4A5568;
+    margin-top: 5px;
+    z-index: 1;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4));
+}
+
+.card-bottom {
+    width: 100%;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: auto;
+    padding-top: 10px;
+    z-index: 1;
+}
+
+.card-name {
+    font-family: var(--font-titles);
+    font-size: 1.4rem;
+    color: #FFF;
+    letter-spacing: 1px;
+}
+
+/* Botones flotantes que aparecen al hacer hover */
+.card-actions {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    z-index: 2;
+}
+
+.fut-card:hover .card-name { opacity: 0; } /* Oculta el nombre */
+.fut-card:hover .card-actions { opacity: 1; transform: translateY(0); } /* Muestra los botones */
+
+.btn-card-action {
+    background: #FFF;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-edit { color: #333; }
+.btn-edit:hover { background: #A2D148; color: #FFF; transform: scale(1.1); }
+
+.btn-delete { color: #E63946; }
+.btn-delete:hover { background: #E63946; color: #FFF; transform: scale(1.1); }
+
+
+/* --- MODAL FIFA STYLE --- */
+.fifa-modal-overlay {
+    display: none;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center; justify-content: center;
+}
+
+.fifa-modal-content {
+    background: #F4F6F9;
+    border-radius: 12px;
+    width: 450px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.modal-header {
+    background: #11141A;
+    padding: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 3px solid var(--fifa-blue);
+}
+
+.modal-header h2 {
+    font-family: var(--font-titles);
+    color: #FFF;
+    font-size: 1.8rem; letter-spacing: 1px; margin: 0;
+}
+
+.btn-close {
+    background: transparent; border: none; color: #FFF; font-size: 1.5rem; cursor: pointer;
+}
+
+.modal-body { padding: 30px; }
+
+.form-group { margin-bottom: 20px; }
+.form-row { display: flex; gap: 15px; }
+.form-group.half { flex: 1; }
+
+.form-group label {
+    display: block; font-weight: bold; font-size: 0.85rem; color: #555; margin-bottom: 8px; text-transform: uppercase;
+}
+
+.form-group input, .form-group select {
+    width: 100%; padding: 12px; border: 1px solid #CCC; border-radius: 6px; font-family: var(--font-main); font-size: 1rem;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--fifa-blue); outline: none; box-shadow: 0 0 0 2px rgba(0,112,224,0.1);
+}
+
+.modal-footer {
+    padding: 20px 30px; background: #E4E7ED; display: flex; justify-content: flex-end; gap: 10px;
+}
+
+.btn-cancel {
+    padding: 10px 20px; border: none; background: #CCC; color: #333; border-radius: 6px; font-weight: bold; cursor: pointer;
+}
+.btn-confirm {
+    padding: 10px 20px; border: none; background: var(--fifa-blue); color: #FFF; border-radius: 6px; font-weight: bold; cursor: pointer;
+}

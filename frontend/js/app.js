@@ -121,16 +121,57 @@ async function eliminarEquipo(id, fromDetalle = false) { if(confirm('¿Eliminar 
 // ── CRUD JUGADORES ──
 function renderJugadores(){ filtrarJugadores(); }
 function filtrarJugadores(){
-  const q=document.getElementById('buscar-jugador').value.toLowerCase(), cont=document.getElementById('jugadores-container');
+  const buscador = document.getElementById('buscar-jugador');
+  const q = buscador ? buscador.value.toLowerCase() : '';
+  const cont = document.getElementById('jugadores-container');
+  if(!cont) return;
+
   const arr=_jugadores.filter(j=>j.nombre.toLowerCase().includes(q)||(j.paisEquipo||'').toLowerCase().includes(q));
   if(!arr.length){cont.innerHTML='<div class="loading">Sin resultados</div>';return;}
   
   // Agrupar por país
   const grupos={};
   arr.forEach(j=>{ const p = j.paisEquipo||'Sin Equipo'; if(!grupos[p]) grupos[p]=[]; grupos[p].push(j); });
-  
-  // Renderizar
-  cont.innerHTML=Object.keys(grupos).sort().map(p=>`<div class="pais-section"><div class="pais-header">${getFlagHtml(p,true)} ${p}</div><div class="jugadores-grid">${grupos[p].map(j=>`<div class="jugador-card"><div class="jugador-dorsal">${j.dorsal||'-'}</div><div class="jugador-info"><div class="jugador-nombre">${j.nombre}</div><div class="jugador-posicion">${j.posicion}</div></div><div class="jugador-acciones"><button class="btn-icon edit" title="Editar" onclick='editarJugador(${JSON.stringify(j).replace(/'/g,"&apos;")})'>Editar</button><button class="btn-icon delete" title="Eliminar" onclick="eliminarJugador(${j.idJugador||j.idjugador})">Eliminar</button></div></div>`).join('')}</div></div>`).join('');
+
+  // Renderizar por país usando el diseño tipo FUT
+  cont.innerHTML = Object.keys(grupos).sort().map(p => `
+    <div class="pais-section" style="margin-bottom: 50px;">
+        <div class="pais-header" style="font-size: 2.2rem; font-family: var(--font-titles); color: #333; border-bottom: 3px solid var(--fifa-blue); margin-bottom: 20px; padding-bottom: 10px; display: flex; align-items: center; gap: 15px;">
+            ${getFlagHtml(p, false)} <span style="margin-top: 5px;">${p.toUpperCase()}</span>
+        </div>
+        <div class="fut-cards-grid">
+            ${grupos[p].map(j => `
+            <div class="fut-card">
+                <div class="card-top">
+                    <div class="card-stats">
+                        <span class="card-dorsal">${j.dorsal||'-'}</span>
+                        <span class="card-pos">${j.posicion||'ND'}</span>
+                    </div>
+                    <div class="card-flag">
+                        ${getFlagHtml(j.paisEquipo || '', true)}
+                    </div>
+                </div>
+                
+                <div class="card-portrait">
+                    <i class='bx bxs-user-circle'></i>
+                </div>
+                
+                <div class="card-bottom">
+                    <div class="card-name">${j.nombre}</div>
+                    <div class="card-actions">
+                        <button class="btn-card-action btn-edit" onclick='editarJugador(${JSON.stringify(j).replace(/'/g,"&apos;")})' title="Editar">
+                            <i class='bx bxs-pencil'></i>
+                        </button>
+                        <button class="btn-card-action btn-delete" onclick="eliminarJugador(${j.idJugador||j.idjugador})" title="Despedir">
+                            <i class='bx bxs-trash'></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            `).join('')}
+        </div>
+    </div>
+  `).join('');
 }
 function cargarSelectEquipos(){ document.getElementById('jug-idequipo').innerHTML='<option value="">-- Selecciona --</option>'+_equipos.map(e=>`<option value="${e.idEquipo||e.idequipo}">${e.pais||e.nombre}</option>`).join(''); }
 function abrirModalJugador(){ cargarSelectEquipos(); document.getElementById('modal-jugador-titulo').innerText='NUEVO JUGADOR'; document.getElementById('jug-id').value=''; document.getElementById('jug-nombre').value=''; document.getElementById('jug-posicion').value='Delantero'; document.getElementById('jug-dorsal').value=''; document.getElementById('jug-idequipo').value=''; document.getElementById('modal-jugador').style.display='flex'; }

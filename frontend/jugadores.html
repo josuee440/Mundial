@@ -1,54 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jugadores - Mundial_Fut_2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/estilos.css">
-  <script src="js/app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugadores - Mundial UMG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <header>
-    <div class="logo">Mundial Fut 2026</div>
-  </header>
+    <nav class="top-nav-bar">
+        <button class="btn-nav-back" onclick="mostrar('dashboard')">
+            <i class='bx bx-chevron-left'></i> Salir al Menú
+        </button>
+        <div class="nav-title">GESTIÓN DE PLANTILLAS</div>
+    </nav>
 
-  <section id="sec-jugadores" class="seccion activa">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <button class="btn btn-gris" onclick="mostrar('dashboard')">Volver al Dashboard</button>
-        <div class="seccion-titulo" style="margin-bottom: 0;">Plantillas de Jugadores</div>
-      </div>
-      <button class="btn btn-verde" onclick="abrirModalJugador()">Nuevo Jugador</button>
-    </div>
-    <div style="margin-bottom: 24px;">
-      <input class="search-input" id="buscar-jugador" type="text" placeholder="Buscar jugador o país..." oninput="filtrarJugadores()" style="width: 100%; max-width: 400px;">
-    </div>
-    
-    <div id="jugadores-container">
-      <div class="loading">Cargando plantillas...</div>
-    </div>
-  </section>
+    <main class="main-plantillas">
+        <div class="tools-bar">
+            <div class="search-box">
+                <i class='bx bx-search'></i>
+                <input id="buscar-jugador" type="text" placeholder="Buscar por nombre, dorsal o posición..." oninput="filtrarJugadores()">
+            </div>
+            <button class="btn-fichar" onclick="abrirModalJugador()">
+                <i class='bx bx-user-plus'></i> Fichar Jugador
+            </button>
+        </div>
 
-  <div id="modal-jugador" class="modal-overlay">
-    <div class="modal-content">
-      <h2 id="modal-jugador-titulo">Nuevo Jugador</h2>
-      <input type="hidden" id="jug-id">
-      <div class="form-group"><label>Nombre</label><input type="text" id="jug-nombre"></div>
-      <div class="form-group">
-        <label>Posición</label>
-        <select id="jug-posicion">
-          <option value="Portero">Portero</option><option value="Defensa">Defensa</option><option value="Mediocampista">Mediocampista</option><option value="Delantero">Delantero</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Dorsal</label><input type="number" id="jug-dorsal"></div>
-      <div class="form-group"><label>Equipo</label><select id="jug-idequipo"></select></div>
-      <div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalJugador()">Cancelar</button><button class="btn btn-verde" onclick="guardarJugador()">Guardar</button></div>
+        <div id="jugadores-container" class="fut-cards-grid">
+            </div>
+    </main>
+
+    <div id="modal-jugador" class="fifa-modal-overlay">
+        <div class="fifa-modal-content">
+            <div class="modal-header">
+                <h2 id="modal-jugador-titulo">NUEVO FICHAJE</h2>
+                <button class="btn-close" onclick="cerrarModalJugador()"><i class='bx bx-x'></i></button>
+            </div>
+            
+            <div class="modal-body">
+                <input type="hidden" id="jug-id">
+                
+                <div class="form-group">
+                    <label>Nombre en la camiseta</label>
+                    <input type="text" id="jug-nombre" placeholder="Ej. L. MESSI">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Posición</label>
+                        <select id="jug-posicion">
+                            <option value="POR">Portero (POR)</option>
+                            <option value="DEF">Defensa (DEF)</option>
+                            <option value="MED">Mediocampista (MED)</option>
+                            <option value="DEL">Delantero (DEL)</option>
+                        </select>
+                    </div>
+                    <div class="form-group half">
+                        <label>Dorsal</label>
+                        <input type="number" id="jug-dorsal" placeholder="10" min="1" max="99">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Selección Nacional (Equipo)</label>
+                    <select id="jug-idequipo">
+                        </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="cerrarModalJugador()">Cancelar</button>
+                <button class="btn-confirm" onclick="guardarJugador()">Confirmar Fichaje</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div id="toast"></div>
+    <div id="toast"></div>
 
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
