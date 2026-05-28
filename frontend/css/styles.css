@@ -1,0 +1,211 @@
+/* --- CONFIGURACIONES GLOBALES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Paleta de colores rediseñada (FIFA inspired) */
+    --fifa-blue: #0070E0; /* Azul del título principal */
+    --fifa-title-blue: #16467F; /* Azul oscuro para el título grande */
+    --fifa-grey-main: #616C8A; /* Gris principal para etiquetas de tarjetas */
+    --fifa-card-bg: #FFFFFF; /* Fondo de tarjetas de navegación */
+    --fifa-card-border: #DEDEDE; /* Borde de tarjetas de navegación */
+    --fifa-nav-blue-bg: #0070E0; /* Fondo azul para tarjeta seleccionada */
+    
+    /* Fondo del cuerpo (ahora claro) */
+    --bg-body: #F0F2F5; 
+    
+    /* Tipografías se mantienen */
+    --font-titles: 'Bebas Neue', sans-serif;
+    --font-main: 'Barlow', sans-serif;
+    
+    /* Transiciones */
+    --transition: all 0.3s ease;
+}
+
+body {
+    background-color: var(--bg-body);
+    font-family: var(--font-main);
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* --- DISEÑO DE PÁGINA COMPLETA --- */
+/* Se ha eliminado el menú lateral, el contenedor main ocupa todo el ancho */
+.right-main {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+}
+
+/* --- SECCIÓN DASHBOARD (NUEVO DISEÑO FIFA) --- */
+.sec-dashboard {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Coloca la navegación en la parte inferior */
+    position: relative;
+    z-index: 1;
+}
+
+/* Capa de efectos de fondo (Stadium y Energía) */
+.sec-dashboard .background-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /* Un gradiente para simular los efectos de energía de la imagen */
+    background: radial-gradient(circle at 10% 90%, #A919CC33 0%, transparent 40%),
+                radial-gradient(circle at 90% 10%, #0070E033 0%, transparent 40%);
+}
+
+/* --- CAPA HERO CON JUGADOR --- */
+.sec-dashboard .hero-layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 40px;
+    z-index: 0;
+}
+
+/* Jugador (posicionado a la derecha) */
+.sec-dashboard .hero-player {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    height: 90vh;
+    z-index: -1;
+    opacity: 1;
+}
+
+/* Contenido de texto Hero */
+.sec-dashboard .hero-content {
+    max-width: 60%;
+    text-align: left;
+    margin-top: -10vh; /* Ajuste fino de posición vertical */
+}
+
+.sec-dashboard .main-title {
+    font-family: var(--font-titles);
+    font-size: 8rem;
+    color: var(--fifa-title-blue);
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.sec-dashboard .main-desc {
+    font-size: 1.5rem;
+    color: var(--fifa-grey-main);
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.sec-dashboard .hero-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.sec-dashboard .main-label {
+    font-family: var(--font-titles);
+    font-size: 2rem;
+    color: var(--fifa-grey-main);
+    display: flex;
+    align-items: center;
+}
+
+/* --- NAVEGACIÓN INFERIOR (TARJETAS) --- */
+.sec-dashboard .bottom-navigation {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 tarjetas en una fila */
+    gap: 15px;
+    padding-bottom: 30px;
+    z-index: 2;
+}
+
+.nav-card {
+    background-color: var(--fifa-card-bg);
+    border: 1px solid var(--fifa-card-border);
+    border-radius: 10px;
+    height: 16rem;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+}
+
+.nav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de la tarjeta seleccionada (Azul) */
+.nav-card.card-selected {
+    background-color: var(--fifa-nav-blue-bg);
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 112, 224, 0.3);
+}
+
+.nav-card .card-label {
+    font-family: var(--font-titles);
+    font-size: 1.5rem;
+    color: var(--fifa-grey-main);
+    margin-bottom: auto;
+}
+
+.nav-card.card-selected .card-label {
+    color: #FFFFFF;
+}
+
+.nav-card .card-icon {
+    font-size: 5rem;
+    color: #666;
+    align-self: flex-end;
+}
+
+.nav-card.card-selected .card-icon {
+    color: #FFFFFF;
+}
+
+/* --- PIE DE PÁGINA (LEYENDA DE CONTROLES) --- */
+.bottom-legend {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 30px;
+    padding: 10px 40px;
+    background-color: transparent;
+    font-size: 1.1rem;
+    color: var(--fifa-grey-main);
+    z-index: 3;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+}
+
+.bottom-legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.bottom-legend .icon-control {
+    font-size: 1.4rem;
+}

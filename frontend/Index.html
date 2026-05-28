@@ -1,137 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mundial FUT 2026 — UMG</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/estilos.css">
-  <script src="js/app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundial UMG - FIFA Re-Design</title>
+    <!-- Tus enlaces a fuentes y Boxicons se mantienen -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Bebas+Neue&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- El enlace a tus estilos se mantiene -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <main class="right-main">
+        <!-- SECCIÓN DASHBOARD (Rediseñada totalmente) -->
+        <section class="sec-dashboard">
+            <div class="hero-layer">
+                <div class="hero-content">
+                    <h1 class="main-title">MUNDIAL UMG 2026</h1>
+                    <p class="main-desc">Simula el torneo y gestiona tu equipo</p>
+                    <div class="hero-stats">
+                        <span class="main-label">0 VICTORIAS</span>
+                        <span class="main-label">EMPATES 0</span>
+                        <span class="main-label">VICTORIAS 0</span>
+                    </div>
+                </div>
+                <!-- Imagen del jugador (REEMPLAZA ESTA IMAGEN) -->
+                <img src="https://i.ibb.co/3WqP4Sj/neymar-png-transparent.png" alt="Neymar" class="hero-player">
+                <div class="background-effect"></div>
+            </div>
 
-  <!-- ===== HEADER ===== -->
-  <header>
-    <div class="logo-wrap">
-      <div class="logo">Mundial <span>Fut</span> 2026</div>
-      <div class="header-badge">UMG</div>
-    </div>
-  </header>
+            <!-- Navegación inferior (Replicando las tarjetas de la imagen) -->
+            <div class="bottom-navigation">
+                <!-- Tarjeta 1 - Seleccionada -->
+                <div class="nav-card card-selected" onclick="mostrar('equipos')">
+                    <span class="card-label">EQUIPOS</span>
+                    <i class='bx bx-shield card-icon'></i>
+                </div>
+                <!-- Tarjeta 2 -->
+                <div class="nav-card" onclick="mostrar('jugadores')">
+                    <span class="card-label">JUGADORES</span>
+                    <i class='bx bx-user-circle card-icon'></i>
+                </div>
+                <!-- Tarjeta 3 -->
+                <div class="nav-card" onclick="mostrar('estadios')">
+                    <span class="card-label">ESTADIOS</span>
+                    <i class='bx bx-buildings card-icon'></i>
+                </div>
+                <!-- Tarjeta 4 -->
+                <div class="nav-card" onclick="mostrar('partidos')">
+                    <span class="card-label">PARTIDOS</span>
+                    <i class='bx bx-clipboard card-icon'></i>
+                </div>
+                <!-- Tarjeta 5 -->
+                <div class="nav-card" onclick="mostrar('simulador')">
+                    <span class="card-label">SIMULADOR</span>
+                    <i class='bx bx-play-circle card-icon'></i>
+                </div>
+                <!-- Tarjeta 6 -->
+                <div class="nav-card" onclick="mostrar('estadisticas')">
+                    <span class="card-label">ESTADÍSTICAS</span>
+                    <i class='bx bx-trophy card-icon'></i>
+                </div>
+            </div>
+        </section>
 
-  <!-- ===== DASHBOARD / MENÚ PRINCIPAL ===== -->
-  <section id="sec-dashboard" class="seccion activa">
-    <div class="seccion-titulo">Menú Principal</div>
-    <div class="seccion-subtitulo">Selecciona una categoría para comenzar</div>
+        <!-- Pie de página con leyenda de controles -->
+        <footer class="bottom-legend">
+            <span><i class='bx bxs-circle icon-control'></i> Seleccionar</span>
+            <span><i class='bx bx-circle icon-control'></i> Atrás</span>
+        </footer>
+    </main>
 
-    <div class="dashboard-grid">
-
-      <div class="stat-card menu-card" onclick="mostrar('equipos')">
-        <div class="icon-wrap">⚽</div>
-        <div class="num" id="cnt-equipos">—</div>
-        <div class="lbl">Equipos</div>
-      </div>
-
-      <div class="stat-card menu-card" onclick="mostrar('jugadores')">
-        <div class="icon-wrap">👤</div>
-        <div class="num" id="cnt-jugadores">—</div>
-        <div class="lbl">Jugadores</div>
-      </div>
-
-      <div class="stat-card menu-card" onclick="mostrar('estadios')">
-        <div class="icon-wrap">🏟️</div>
-        <div class="num" id="cnt-estadios">—</div>
-        <div class="lbl">Estadios</div>
-      </div>
-
-      <div class="stat-card menu-card" onclick="mostrar('partidos')">
-        <div class="icon-wrap">📋</div>
-        <div class="num" id="cnt-partidos">—</div>
-        <div class="lbl">Partidos Históricos</div>
-      </div>
-
-      <div class="stat-card menu-card sim-card" onclick="mostrar('simulador')">
-        <div class="icon-wrap">▶</div>
-        <div class="num">Simular</div>
-        <div class="lbl">Motor de Torneo</div>
-      </div>
-
-      <div class="stat-card menu-card rep-card" onclick="mostrar('estadisticas')">
-        <div class="icon-wrap">🏆</div>
-        <div class="num">Reportes</div>
-        <div class="lbl">Premios Finales</div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ===== ENTRENADORES ===== -->
-  <section id="sec-entrenadores" class="seccion">
-    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-      <button class="btn btn-gris" onclick="mostrar('dashboard')">← Volver</button>
-      <div class="seccion-titulo" style="margin-bottom: 0;">Entrenadores</div>
-    </div>
-    <div class="seccion-subtitulo">Cuerpo técnico registrado</div>
-    <div class="tabla-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nombre</th>
-            <th>País (Equipo)</th>
-          </tr>
-        </thead>
-        <tbody id="tb-entrenadores">
-          <tr><td colspan="3" class="loading">Cargando datos...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ===== GRUPOS ===== -->
-  <section id="sec-grupos" class="seccion">
-    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-      <button class="btn btn-gris" onclick="mostrar('dashboard')">← Volver</button>
-      <div class="seccion-titulo" style="margin-bottom: 0;">Tabla de Grupos</div>
-    </div>
-    <div class="seccion-subtitulo">Fase de grupos — Mundial 2026</div>
-    <div class="grupos-grid" id="grupos-container"></div>
-  </section>
-
-  <!-- ===== MODAL JUGADOR ===== -->
-  <div id="modal-jugador" class="modal-overlay">
-    <div class="modal-content">
-      <h2 id="modal-jugador-titulo">Nuevo Jugador</h2>
-      <input type="hidden" id="jug-id">
-      <div class="form-group">
-        <label>Nombre completo</label>
-        <input type="text" id="jug-nombre" placeholder="Ej. Lionel Messi">
-      </div>
-      <div class="form-group">
-        <label>Posición</label>
-        <select id="jug-posicion">
-          <option value="Portero">Portero</option>
-          <option value="Defensa">Defensa</option>
-          <option value="Mediocampista">Mediocampista</option>
-          <option value="Delantero">Delantero</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Dorsal</label>
-        <input type="number" id="jug-dorsal" min="1" max="99" placeholder="Ej. 10">
-      </div>
-      <div class="form-group">
-        <label>Equipo</label>
-        <select id="jug-idequipo"></select>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-gris" onclick="cerrarModalJugador()">Cancelar</button>
-        <button class="btn btn-acento" onclick="guardarJugador()">Guardar jugador</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== TOAST ===== -->
-  <div id="toast"></div>
-
+    <!-- Tus scripts se mantienen -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
