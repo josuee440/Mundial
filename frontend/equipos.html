@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipos - Mundial_Fut_2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <header>
+    <div class="logo-wrap">
+      <div class="logo-icon">⚽</div>
+      <div>
+        <div class="logo">Mundial_Fut UMG 2026</div>
+        <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="sec-equipos" class="seccion activa">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver al Dashboard</button>
+        <div class="seccion-titulo" style="margin-bottom: 0;">Selecciones Clasificadas</div>
+      </div>
+    </div>
+    
+    <div id="grid-equipos" class="equipos-grid">
+      <div class="loading">Cargando...</div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+      <button class="btn btn-verde" style="font-size: 1.1rem; padding: 16px 32px;" onclick="abrirModalEquipo()">+ Crear Nueva Selección</button>
+    </div>
+  </section>
+
+  <section id="sec-equipo-detalle" class="seccion">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+      <button class="btn" style="background: #444; color: white;" onclick="mostrar('equipos')">⬅ Volver a Equipos</button>
+      <div class="seccion-titulo" style="margin-bottom: 0;">Detalle de Selección</div>
+    </div>
+    <div class="detalle-equipo-wrap" id="detalle-equipo-cont"></div>
+  </section>
+
+  <div id="modal-equipo" class="modal-overlay">
+    <div class="modal-content">
+      <h2 id="modal-equipo-titulo">Nuevo Equipo</h2>
+      <input type="hidden" id="eq-id">
+      <div class="form-group"><label>País</label><input type="text" id="eq-pais"></div>
+      <div class="form-group"><label>Grupo</label><input type="text" id="eq-grupo"></div>
+      <div class="form-group"><label>ID Grupo</label><input type="number" id="eq-idgrupo"></div>
+      <div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalEquipo()">Cancelar</button><button class="btn btn-verde" onclick="guardarEquipo()">Guardar</button></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulación - Mundial_Fut_2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <header>
+    <div class="logo-wrap">
+      <div class="logo-icon">⚽</div>
+      <div>
+        <div class="logo">Mundial_Fut UMG 2026</div>
+        <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="sec-simulador" class="seccion activa" style="max-width: 100%; padding: 20px 40px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver al Dashboard</button>
+        <div class="seccion-titulo" style="margin-bottom: 0;">Motor de Simulación Oficial</div>
+      </div>
+    </div>
+    
+    <div style="display:flex;align-items:stretch;margin-bottom:22px;border-radius:10px;border:1px solid rgba(255,255,255,0.1); max-width: 800px; margin: 0 auto 22px auto;">
+      <div id="prog-1" style="flex:1;padding:12px 4px;text-align:center;font-family:Bebas Neue,sans-serif;font-size:1rem;background:rgba(45,198,83,0.2);color:var(--verde);cursor:pointer;" onclick="irAFase('grupos-sim')">1 · FASE DE GRUPOS</div>
+      <div id="prog-2" style="flex:1;padding:12px 4px;text-align:center;font-family:Bebas Neue,sans-serif;font-size:1rem;background:rgba(255,255,255,0.03);color:var(--gris);cursor:pointer;" onclick="irAFase('eliminacion')">2 · LLAVES DE ELIMINACIÓN</div>
+    </div>
+
+    <div id="vista-grupos-sim">
+      <div class="sim-controles" style="justify-content: center; margin-bottom: 40px;">
+        <button class="btn btn-verde" style="font-size: 1.1rem; padding: 16px 32px;" onclick="simularFaseGrupos()">▶ Simular Fase Grupos</button>
+        <button class="btn btn-rojo" onclick="resetTodo()">↺ Reiniciar Todo</button>
+        <button onclick="limpiarBD()" style="padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700;background:linear-gradient(135deg,#6a0dad,#9b30ff);color:white;border:none;">🗑️ Limpiar BD</button>
+        <span id="estado-grupos" class="fase-label"></span>
+      </div>
+      <div class="grupos-sim-grid" id="grupos-sim-container" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+        <div class="loading" style="grid-column: 1 / -1; font-size: 1.2rem;">Presiona "Simular Fase de Grupos" para comenzar el torneo...</div>
+      </div>
+    </div>
+
+    <div id="vista-eliminacion" style="display:none;">
+      <div class="sim-controles" style="justify-content: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05);">
+        <button class="btn btn-verde" style="font-size: 1.1rem; padding: 12px 24px;" onclick="simularFase()">▶ Siguiente Fase</button>
+        <span class="fase-label" id="fase-actual" style="margin: 0 20px;">16AVOS DE FINAL</span>
+        <button class="btn btn-rojo" onclick="resetSimulador()">↺ Reiniciar Llaves</button>
+      </div>
+      <div class="bracket" id="bracket"></div>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+</body>
+</html>

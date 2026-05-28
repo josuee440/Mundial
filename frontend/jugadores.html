@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jugadores - Mundial_Fut_2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <header>
+    <div class="logo-wrap">
+      <div class="logo-icon">⚽</div>
+      <div>
+        <div class="logo">Mundial_Fut UMG 2026</div>
+        <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="sec-jugadores" class="seccion activa">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver al Dashboard</button>
+        <div class="seccion-titulo" style="margin-bottom: 0;">Plantillas de Jugadores</div>
+      </div>
+      <button class="btn btn-verde" onclick="abrirModalJugador()">+ Nuevo Jugador</button>
+    </div>
+    <div style="margin-bottom: 24px;">
+      <input class="search-input" id="buscar-jugador" type="text" placeholder="🔍 Buscar jugador o país..." oninput="filtrarJugadores()" style="width: 100%; max-width: 400px;">
+    </div>
+    
+    <div id="jugadores-container">
+      <div class="loading">Cargando plantillas...</div>
+    </div>
+  </section>
+
+  <div id="modal-jugador" class="modal-overlay">
+    <div class="modal-content">
+      <h2 id="modal-jugador-titulo">Nuevo Jugador</h2>
+      <input type="hidden" id="jug-id">
+      <div class="form-group"><label>Nombre</label><input type="text" id="jug-nombre"></div>
+      <div class="form-group">
+        <label>Posición</label>
+        <select id="jug-posicion">
+          <option value="Portero">Portero</option><option value="Defensa">Defensa</option><option value="Mediocampista">Mediocampista</option><option value="Delantero">Delantero</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Dorsal</label><input type="number" id="jug-dorsal"></div>
+      <div class="form-group"><label>Equipo</label><select id="jug-idequipo"></select></div>
+      <div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalJugador()">Cancelar</button><button class="btn btn-verde" onclick="guardarJugador()">Guardar</button></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+</body>
+</html>

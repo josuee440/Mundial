@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estadios - Mundial_Fut_2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <header>
+    <div class="logo-wrap">
+      <div class="logo-icon">⚽</div>
+      <div>
+        <div class="logo">Mundial_Fut UMG 2026</div>
+        <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="sec-estadios" class="seccion activa">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver al Dashboard</button>
+        <div class="seccion-titulo" style="margin-bottom: 0;">Sedes y Estadios</div>
+      </div>
+    </div>
+    
+    <div id="grid-estadios" class="estadios-grid">
+      <div class="loading">Cargando estadios...</div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+      <button class="btn btn-verde" style="font-size: 1.1rem; padding: 16px 32px;" onclick="abrirModalEstadio()">+ Registrar Nuevo Estadio</button>
+    </div>
+  </section>
+
+  <div id="modal-estadio" class="modal-overlay">
+    <div class="modal-content">
+      <h2 id="modal-estadio-titulo">Nuevo Estadio</h2>
+      <input type="hidden" id="est-id">
+      <div class="form-group"><label>Nombre</label><input type="text" id="est-nombre"></div>
+      <div class="form-group"><label>Ciudad</label><input type="text" id="est-ciudad"></div>
+      <div class="form-group"><label>País</label><input type="text" id="est-pais"></div>
+      <div class="form-group"><label>Capacidad</label><input type="number" id="est-capacidad"></div>
+      <div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalEstadio()">Cancelar</button><button class="btn btn-verde" onclick="guardarEstadio()">Guardar</button></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</body>
+</html>

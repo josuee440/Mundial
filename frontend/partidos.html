@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partidos - Mundial_Fut_2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <header>
+    <div class="logo-wrap">
+      <div class="logo-icon">⚽</div>
+      <div>
+        <div class="logo">Mundial_Fut UMG 2026</div>
+        <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="sec-partidos" class="seccion activa">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver al Dashboard</button>
+        <div class="seccion-titulo" style="margin-bottom: 0;">Partidos Históricos</div>
+      </div>
+    </div>
+    
+    <div id="partidos-container">
+      <div class="loading">Cargando partidos...</div>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+</body>
+</html>

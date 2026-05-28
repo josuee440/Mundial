@@ -12,8 +12,26 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.*;
+import java.util.Collections;
 
 public class SimuladorController implements HttpHandler {
+    // Helper record para ordenar equipos en la fase de grupos
+    private record EquipoStats(Equipo equipo, int[] stats) implements Comparable<EquipoStats> {
+        // stats: [pj, pg, pe, pp, gf, gc, pts]
+        public int getPuntos() { return stats[6]; }
+        public int getDifGoles() { return stats[4] - stats[5]; }
+        public int getGolesFavor() { return stats[4]; }
+
+        @Override
+        public int compareTo(EquipoStats other) {
+            int ptsCompare = Integer.compare(other.getPuntos(), this.getPuntos());
+            if (ptsCompare != 0) return ptsCompare;
+            int gdCompare = Integer.compare(other.getDifGoles(), this.getDifGoles());
+            if (gdCompare != 0) return gdCompare;
+            return Integer.compare(other.getGolesFavor(), this.getGolesFavor());
+        }
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         Servidor.setCors(exchange);
@@ -35,10 +53,21 @@ public class SimuladorController implements HttpHandler {
     // Simula las llaves completas de la Fase de Grupos
     private void simularFaseGrupos(HttpExchange exchange) throws IOException {
         try (Connection con = Conexion.getConexion()) {
-            // Limpiar tabla posiciones para empezar en limpio
-            try (Statement st = con.createStatement()) { st.execute("DELETE FROM posiciones"); }
+            // Limpiar todo el historial de torneos anteriores para empezar de cero
+            try (Statement st = con.createStatement()) { 
+                st.execute("DELETE FROM goles");
+                st.execute("DELETE FROM tarjetas");
+                st.execute("DELETE FROM cambios");
+                st.execute("DELETE FROM alineaciones");
+                st.execute("DELETE FROM posiciones");
+                st.execute("DELETE FROM partidos");
+            }
 
             List<Equipo> equipos = new EquipoDAO().listar();
+            if (equipos.size() < 48) {
+                Servidor.responder(exchange, Json.error("Se necesitan 48 equipos para la simulación. Actualmente hay " + equipos.size()));
+                return;
+            }
             Map<String, List<Equipo>> grupos = new HashMap<>();
             for (Equipo e : equipos) {
                 String g = e.getGrupo() != null ? e.getGrupo() : "?";
@@ -60,6 +89,29 @@ public class SimuladorController implements HttpHandler {
                 }
             }
 
+            // Lógica de clasificación para 48 equipos
+            Map<String, List<EquipoStats>> tablasDeGrupos = new HashMap<>();
+            for (Equipo e : equipos) {
+                String g = e.getGrupo() != null ? e.getGrupo() : "?";
+                tablasDeGrupos.putIfAbsent(g, new ArrayList<>());
+                tablasDeGrupos.get(g).add(new EquipoStats(e, stats.get(e.getIdequipo())));
+            }
+
+            List<Equipo> clasificados = new ArrayList<>();
+            List<EquipoStats> terceros = new ArrayList<>();
+
+            for (List<EquipoStats> grupo : tablasDeGrupos.values()) {
+                Collections.sort(grupo); // Ordena usando el compareTo del record
+                if (grupo.size() > 0) clasificados.add(grupo.get(0).equipo());
+                if (grupo.size() > 1) clasificados.add(grupo.get(1).equipo());
+                if (grupo.size() > 2) terceros.add(grupo.get(2));
+            }
+
+            Collections.sort(terceros); // Ordena la lista de terceros
+            for (int i = 0; i < 8 && i < terceros.size(); i++) {
+                clasificados.add(terceros.get(i).equipo());
+            }
+
             // Guardar nuevas posiciones
             String sqlPos = "INSERT INTO posiciones (id_equipo, puntos, partidos_jugados, partidos_ganados, partidos_empatados, partidos_perdidos, goles_favor, goles_contra) VALUES (?,?,?,?,?,?,?,?)";
             try (PreparedStatement ps = con.prepareStatement(sqlPos)) {
@@ -70,7 +122,8 @@ public class SimuladorController implements HttpHandler {
                     ps.setInt(7, s[4]); ps.setInt(8, s[5]); ps.executeUpdate();
                 }
             }
-            Servidor.responder(exchange, Json.ok("Grupos calculados en Java"));
+            // Responder con los 32 equipos clasificados
+            Servidor.responder(exchange, Json.equiposToJson(clasificados));
         } catch (Exception e) {
             Servidor.responder(exchange, Json.error(e.getMessage()));
         }

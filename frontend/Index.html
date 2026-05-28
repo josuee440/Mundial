@@ -1,138 +1,157 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mundial_Fut_2026 - UMG</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/estilos.css">
-<script src="js/app.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mundial_Fut_2026 - UMG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script src="js/app.js" defer></script>
 </head>
 <body>
 
-<header>
-  <div class="logo-wrap">
-    <div class="logo-icon">⚽</div>
-    <div>
-      <div class="logo">Mundial_Fut UMG 2026</div>
-      <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
+  <header>
+    <div class="logo-wrap">
+      <div class="logo-icon">⚽</div>
+      <div>
+        <div class="logo">Mundial_Fut UMG 2026</div>
+        <div class="banderas">🇺🇸 🇨🇦 🇲🇽</div>
+      </div>
+    </div>
+  </header>
+
+  <section id="sec-dashboard" class="seccion activa">
+    <div class="seccion-titulo">Menú Principal</div>
+    <div class="dashboard-grid">
+      <div class="stat-card menu-card" onclick="mostrar('equipos')">
+        <div class="ico">🌎</div>
+        <div class="num" id="cnt-equipos">—</div>
+        <div class="lbl">Equipos</div>
+      </div>
+      <div class="stat-card menu-card" onclick="mostrar('jugadores')">
+        <div class="ico">👤</div>
+        <div class="num" id="cnt-jugadores">—</div>
+        <div class="lbl">Jugadores</div>
+      </div>
+      <div class="stat-card menu-card" onclick="mostrar('estadios')">
+        <div class="ico">🏟️</div>
+        <div class="num" id="cnt-estadios">—</div>
+        <div class="lbl">Estadios</div>
+      </div>
+      <div class="stat-card menu-card" onclick="mostrar('partidos')">
+        <div class="ico">📋</div>
+        <div class="num" id="cnt-partidos">—</div>
+        <div class="lbl">Partidos Históricos</div>
+      </div>
+      <div class="stat-card menu-card sim-card" onclick="mostrar('simulador')">
+        <div class="ico">⚡</div>
+        <div class="num">Simular</div>
+        <div class="lbl">Ir al Motor de Torneo</div>
+      </div>
+      <div class="stat-card menu-card rep-card" onclick="mostrar('reportes')">
+        <div class="ico">🏆</div>
+        <div class="num">Reportes</div>
+        <div class="lbl">Ver Premios Finales</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sec-entrenadores" class="seccion">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+      <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver</button>
+      <div class="seccion-titulo" style="margin-bottom: 0;">Entrenadores</div>
+    </div>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Nombre</th><th>País (Equipo)</th></tr>
+        </thead>
+        <tbody id="tb-entrenadores">
+          <tr><td colspan="3" class="loading">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="sec-grupos" class="seccion">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+      <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver</button>
+      <div class="seccion-titulo" style="margin-bottom: 0;">Tabla de Grupos</div>
+    </div>
+    <div class="grupos-grid" id="grupos-container"></div>
+  </section>
+
+  <section id="sec-partidos" class="seccion">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+      <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver</button>
+      <div class="seccion-titulo" style="margin-bottom: 0;">Partidos</div>
+    </div>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Fase</th><th>Local</th><th>Visitante</th><th>Resultado</th><th>Estadio</th></tr>
+        </thead>
+        <tbody id="tb-partidos">
+          <tr><td colspan="6" class="loading">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="sec-reportes" class="seccion">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+      <button class="btn" style="background: #444; color: white;" onclick="mostrar('dashboard')">🏠 Volver</button>
+      <div class="seccion-titulo" style="margin-bottom: 0;">Reportes Finales</div>
+    </div>
+    <div id="campeon-box" style="display:none;" class="campeon-banner">
+      <div class="campeon-trofeo">🏆</div>
+      <div class="campeon-label">Campeón del Mundo</div>
+      <div class="campeon-nombre" id="campeon-nombre">—</div>
+    </div>
+    <div class="reportes-grid">
+      <div class="reporte-card">
+        <div class="reporte-header">⚽ Pichichi</div>
+        <div class="podio" id="podio-goleadores"></div>
+      </div>
+      <div class="reporte-card">
+        <div class="reporte-header">🧤 Guante de Oro (Menos goles recibidos)</div>
+        <div class="podio" id="podio-porteros"></div>
+      </div>
+      <div class="reporte-card">
+        <div class="reporte-header">🟨 Tarjetas</div>
+        <div class="podio" id="podio-tarjetas"></div>
+      </div>
+      <div class="reporte-card">
+        <div class="reporte-header">🌎 Goles País</div>
+        <div class="podio" id="podio-paises"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="modal-jugador" class="modal-overlay">
+    <div class="modal-content">
+      <h2 id="modal-jugador-titulo">Nuevo Jugador</h2>
+      <input type="hidden" id="jug-id">
+      <div class="form-group"><label>Nombre</label><input type="text" id="jug-nombre"></div>
+      <div class="form-group">
+        <label>Posición</label>
+        <select id="jug-posicion">
+          <option value="Portero">Portero</option>
+          <option value="Defensa">Defensa</option>
+          <option value="Mediocampista">Mediocampista</option>
+          <option value="Delantero">Delantero</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Dorsal</label><input type="number" id="jug-dorsal"></div>
+      <div class="form-group"><label>Equipo</label><select id="jug-idequipo"></select></div>
+      <div class="modal-actions">
+        <button class="btn btn-rojo" onclick="cerrarModalJugador()">Cancelar</button>
+        <button class="btn btn-verde" onclick="guardarJugador()">Guardar</button>
+      </div>
     </div>
   </div>
-  <nav>
-    <button class="active" onclick="mostrar('dashboard',this)">🏠 Dashboard</button>
-    <button onclick="mostrar('equipos',this)">🌎 Equipos</button>
-    <button onclick="mostrar('jugadores',this)">👤 Jugadores</button>
-    <button onclick="mostrar('estadios',this)">🏟️ Estadios</button>
-    <button onclick="mostrar('entrenadores',this)">🧑‍💼 Entrenadores</button>
-    <button onclick="mostrar('grupos',this)">📊 Grupos</button>
-    <button onclick="mostrar('partidos',this)">📋 Partidos</button>
-    <button onclick="mostrar('simulador',this)">⚡ Simulador</button>
-    <button onclick="mostrar('reportes',this)">🏆 Reportes</button>
-  </nav>
-</header>
 
-<section id="sec-dashboard" class="seccion activa">
-  <div class="seccion-titulo">Dashboard</div>
-  <div class="dashboard-grid">
-    <div class="stat-card"><div class="ico">🌎</div><div class="num" id="cnt-equipos">—</div><div class="lbl">Equipos</div></div>
-    <div class="stat-card"><div class="ico">👤</div><div class="num" id="cnt-jugadores">—</div><div class="lbl">Jugadores</div></div>
-    <div class="stat-card"><div class="ico">🏟️</div><div class="num" id="cnt-estadios">—</div><div class="lbl">Estadios</div></div>
-    <div class="stat-card"><div class="ico">📋</div><div class="num" id="cnt-partidos">—</div><div class="lbl">Partidos</div></div>
-    <div class="stat-card"><div class="ico">⚽</div><div class="num" id="cnt-goles">—</div><div class="lbl">Goles</div></div>
-    <div class="stat-card"><div class="ico">🟨</div><div class="num" id="cnt-tarjetas">—</div><div class="lbl">Tarjetas</div></div>
-  </div>
-</section>
-
-<section id="sec-equipos" class="seccion">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <div class="seccion-titulo" style="margin-bottom: 0;">Equipos</div>
-    <button class="btn btn-verde" onclick="abrirModalEquipo()">+ Nuevo Equipo</button>
-  </div>
-  <div class="tabla-wrap">
-    <table>
-      <thead><tr><th>#</th><th>País</th><th>Grupo</th><th style="text-align: right;">Acciones</th></tr></thead>
-      <tbody id="tb-equipos"><tr><td colspan="4" class="loading">Cargando...</td></tr></tbody>
-    </table>
-  </div>
-</section>
-
-<section id="sec-jugadores" class="seccion">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <div class="seccion-titulo" style="margin-bottom: 0;">Jugadores</div>
-    <button class="btn btn-verde" onclick="abrirModalJugador()">+ Nuevo Jugador</button>
-  </div>
-  <div style="margin-bottom:14px;"><input class="search-input" id="buscar-jugador" type="text" placeholder="🔍 Buscar jugador o país..." oninput="filtrarJugadores()"></div>
-  <div class="tabla-wrap">
-    <table>
-      <thead><tr><th>#</th><th>Nombre</th><th>Posición</th><th>Dorsal</th><th>País</th><th style="text-align: right;">Acciones</th></tr></thead>
-      <tbody id="tb-jugadores"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody>
-    </table>
-  </div>
-</section>
-
-<section id="sec-estadios" class="seccion">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <div class="seccion-titulo" style="margin-bottom: 0;">Estadios</div>
-    <button class="btn btn-verde" onclick="abrirModalEstadio()">+ Nuevo Estadio</button>
-  </div>
-  <div class="tabla-wrap">
-    <table>
-      <thead><tr><th>#</th><th>Nombre</th><th>Ciudad</th><th>País</th><th>Capacidad</th><th style="text-align: right;">Acciones</th></tr></thead>
-      <tbody id="tb-estadios"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody>
-    </table>
-  </div>
-</section>
-
-<section id="sec-entrenadores" class="seccion"><div class="seccion-titulo">Entrenadores</div><div class="tabla-wrap"><table><thead><tr><th>#</th><th>Nombre</th><th>País (Equipo)</th></tr></thead><tbody id="tb-entrenadores"><tr><td colspan="3" class="loading">Cargando...</td></tr></tbody></table></div></section>
-
-<section id="sec-grupos" class="seccion"><div class="seccion-titulo">Tabla de Grupos</div><div class="grupos-grid" id="grupos-container"></div></section>
-
-<section id="sec-partidos" class="seccion"><div class="seccion-titulo">Partidos</div><div class="tabla-wrap"><table><thead><tr><th>ID</th><th>Fase</th><th>Local</th><th>Visitante</th><th>Resultado</th><th>Estadio</th></tr></thead><tbody id="tb-partidos"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody></table></div></section>
-
-<section id="sec-simulador" class="seccion">
-  <div class="seccion-titulo">Simulador del Torneo</div>
-  <div style="display:flex;align-items:stretch;margin-bottom:22px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
-    <div id="prog-1" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;font-size:0.72rem;background:rgba(45,198,83,0.2);color:var(--verde);cursor:pointer;" onclick="irAFase('grupos-sim')">1·GRUPOS</div>
-    <div id="prog-2" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);cursor:pointer;" onclick="irAFase('eliminacion')">2·ELIMINACIÓN</div>
-  </div>
-
-  <div id="vista-grupos-sim">
-    <div class="sim-controles">
-      <button class="btn btn-verde" onclick="simularFaseGrupos()">▶ Simular Fase Grupos</button>
-      <button class="btn btn-rojo" onclick="resetTodo()">↺ Reiniciar Todo</button>
-      <button onclick="limpiarBD()" style="padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700;background:linear-gradient(135deg,#6a0dad,#9b30ff);color:white;border:none;">🗑️ Limpiar BD</button>
-      <span id="estado-grupos" class="fase-label"></span>
-    </div>
-    <div class="grupos-sim-grid" id="grupos-sim-container"><div class="loading">Presiona "Simular Fase de Grupos"</div></div>
-  </div>
-
-  <div id="vista-eliminacion" style="display:none;">
-    <div class="sim-controles">
-      <button class="btn btn-verde" onclick="simularFase()">▶ Simular fase</button>
-      <button class="btn btn-oro" onclick="simularTodo()">⚡ Simular torneo completo</button>
-      <button class="btn btn-rojo" onclick="resetSimulador()">↺ Reiniciar</button>
-      <span class="fase-label" id="fase-actual">16AVOS DE FINAL</span>
-    </div>
-    <div class="bracket" id="bracket"></div>
-  </div>
-</section>
-
-<section id="sec-reportes" class="seccion">
-  <div class="seccion-titulo">Reportes Finales</div>
-  <div id="campeon-box" style="display:none;" class="campeon-banner"><div class="campeon-trofeo">🏆</div><div class="campeon-label">Campeón del Mundo</div><div class="campeon-nombre" id="campeon-nombre">—</div></div>
-  <div class="reportes-grid">
-    <div class="reporte-card"><div class="reporte-header">⚽ Pichichi</div><div class="podio" id="podio-goleadores"></div></div>
-    <div class="reporte-card"><div class="reporte-header">🧤 Guante de Oro (Menos goles recibidos)</div><div class="podio" id="podio-porteros"></div></div>
-    <div class="reporte-card"><div class="reporte-header">🟨 Tarjetas</div><div class="podio" id="podio-tarjetas"></div></div>
-    <div class="reporte-card"><div class="reporte-header">🌎 Goles País</div><div class="podio" id="podio-paises"></div></div>
-  </div>
-</section>
-
-<div id="modal-equipo" class="modal-overlay"><div class="modal-content"><h2 id="modal-equipo-titulo">Nuevo Equipo</h2><input type="hidden" id="eq-id"><div class="form-group"><label>País</label><input type="text" id="eq-pais"></div><div class="form-group"><label>Grupo</label><input type="text" id="eq-grupo"></div><div class="form-group"><label>ID Grupo</label><input type="number" id="eq-idgrupo"></div><div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalEquipo()">Cancelar</button><button class="btn btn-verde" onclick="guardarEquipo()">Guardar</button></div></div></div>
-<div id="modal-jugador" class="modal-overlay"><div class="modal-content"><h2 id="modal-jugador-titulo">Nuevo Jugador</h2><input type="hidden" id="jug-id"><div class="form-group"><label>Nombre</label><input type="text" id="jug-nombre"></div><div class="form-group"><label>Posición</label><select id="jug-posicion"><option value="Portero">Portero</option><option value="Defensa">Defensa</option><option value="Mediocampista">Mediocampista</option><option value="Delantero">Delantero</option></select></div><div class="form-group"><label>Dorsal</label><input type="number" id="jug-dorsal"></div><div class="form-group"><label>Equipo</label><select id="jug-idequipo"></select></div><div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalJugador()">Cancelar</button><button class="btn btn-verde" onclick="guardarJugador()">Guardar</button></div></div></div>
-<div id="modal-estadio" class="modal-overlay"><div class="modal-content"><h2 id="modal-estadio-titulo">Nuevo Estadio</h2><input type="hidden" id="est-id"><div class="form-group"><label>Nombre</label><input type="text" id="est-nombre"></div><div class="form-group"><label>Ciudad</label><input type="text" id="est-ciudad"></div><div class="form-group"><label>País</label><input type="text" id="est-pais"></div><div class="form-group"><label>Capacidad</label><input type="number" id="est-capacidad"></div><div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalEstadio()">Cancelar</button><button class="btn btn-verde" onclick="guardarEstadio()">Guardar</button></div></div></div>
-
-<div id="toast"></div>
+  <div id="toast"></div>
 
 </body>
 </html>
