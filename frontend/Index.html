@@ -5,291 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mundial_Fut_2026 - UMG</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --rojo:     #ff3344;
-  --azul:     #0f1c2e;
-  --azul2:    #1f3047;
-  --azul3:    #152538;
-  --verde:    #00e676;
-  --blanco:   #f8f9fa;
-  --gris:     #94a3b8;
-  --oro:      #ffca28;
-  --oscuro:   #070d19;
-  --card-bg:  rgba(31, 48, 71, 0.35);
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Inter', sans-serif;
-  color: var(--blanco);
-  min-height: 100vh;
-  background-color: var(--oscuro);
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(255, 51, 68, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(0, 230, 118, 0.05) 0%, transparent 40%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='grid' width='40' height='40' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 40 0 L 0 0 0 40' fill='none' stroke='rgba(255,255,255,0.015)' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)'/%3E%3C/svg%3E");
-  background-attachment: fixed;
-}
-
-/* ── HEADER ELITE ── */
-header {
-  background: rgba(7, 13, 25, 0.85);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 16px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  backdrop-filter: blur(16px);
-}
-
-.logo-wrap { display: flex; align-items: center; gap: 14px; }
-.logo-icon { font-size: 2.2rem; filter: drop-shadow(0 0 10px var(--oro)); }
-
-.logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2rem;
-  letter-spacing: 3px;
-  background: linear-gradient(135deg, #fff, var(--oro));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.banderas { font-size: 1rem; letter-spacing: 2px; opacity: 0.6; margin-top: -2px; }
-
-nav { display: flex; gap: 8px; flex-wrap: wrap; }
-nav button {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--gris);
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-nav button:hover { 
-  background: rgba(255, 255, 255, 0.08); 
-  color: var(--blanco);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-nav button.active { 
-  background: var(--blanco); 
-  border-color: var(--blanco); 
-  color: var(--oscuro);
-  font-weight: 700;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-}
-
-/* ── SECCIONES ── */
-.seccion { display: none; padding: 40px 40px; max-width: 1300px; margin: auto; }
-.seccion.activa { display: block; animation: smoothFade 0.4s ease-out; }
-@keyframes smoothFade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-
-.seccion-titulo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.5rem;
-  letter-spacing: 3px;
-  margin-bottom: 30px;
-  color: var(--blanco);
-  text-transform: uppercase;
-}
-
-/* ── STAT CARDS PREMIUM ── */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-.stat-card {
-  background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 24px 20px;
-  text-align: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-.stat-card:hover { 
-  transform: translateY(-5px); 
-  border-color: rgba(255, 255, 255, 0.15); 
-  box-shadow: 0 12px 30px rgba(0,0,0,0.4); 
-}
-.stat-card .num { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; color: var(--blanco); line-height: 1; }
-.stat-card .lbl { font-size: 0.72rem; color: var(--gris); margin-top: 8px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
-.stat-card .ico { font-size: 1.8rem; margin-bottom: 8px; opacity: 0.9; }
-
-/* ── TABLES MODERNA ── */
-.tabla-wrap { 
-  background: var(--card-bg);
-  backdrop-filter: blur(10px);
-  border-radius: 16px; 
-  border: 1px solid rgba(255, 255, 255, 0.05); 
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-table { width: 100%; border-collapse: collapse; }
-thead tr { background: rgba(15, 28, 46, 0.8); }
-th {
-  padding: 16px 20px;
-  text-align: left;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--gris);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-td { padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); font-size: 0.9rem; color: #e2e8f0; }
-tbody tr:hover td { background: rgba(255, 255, 255, 0.02); }
-tbody tr:last-child td { border-bottom: none; }
-
-/* BADGES */
-.badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-.badge-grupo { background: rgba(255,255,255,0.08); color: var(--blanco); border: 1px solid rgba(255,255,255,0.1); }
-.badge-amarilla { background: rgba(255, 202, 40, 0.12); color: var(--oro); border: 1px solid rgba(255, 202, 40, 0.3); }
-.badge-roja { background: rgba(255, 51, 68, 0.12); color: var(--rojo); border: 1px solid rgba(255, 51, 68, 0.3); }
-.badge-fase { background: rgba(148, 163, 184, 0.1); color: var(--gris); }
-
-/* ── BOTONES MODERNOS ── */
-.btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.btn-verde { background: var(--verde); color: var(--oscuro); box-shadow: 0 4px 20px rgba(0, 230, 118, 0.25); }
-.btn-verde:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 230, 118, 0.4); }
-.btn-oro { background: var(--oro); color: var(--oscuro); }
-.btn-oro:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 202, 40, 0.3); }
-.btn-rojo { background: rgba(255, 51, 68, 0.1); border: 1px solid rgba(255, 51, 68, 0.3); color: var(--rojo); }
-.btn-rojo:hover { background: var(--rojo); color: white; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 51, 68, 0.3); }
-
-/* ── MODALES CRUD ── */
-.modal-overlay {
-  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 1000;
-  justify-content: center; align-items: center;
-}
-.modal-content {
-  background: var(--azul2); padding: 30px; border-radius: 16px; width: 400px;
-  border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-}
-.modal-content h2 { margin-bottom: 20px; font-family: 'Bebas Neue', sans-serif; color: var(--oro); font-size: 2rem;}
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; font-size: 0.8rem; color: var(--gris); margin-bottom: 5px; text-transform: uppercase;}
-.form-group input {
-  width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(0,0,0,0.3); color: white; outline: none;
-}
-.form-group input:focus { border-color: var(--oro); }
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
-
-/* ── BUSCADOR ── */
-.search-input {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--blanco);
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-size: 0.88rem;
-  width: 300px;
-  transition: all 0.3s;
-}
-.search-input:focus { outline: none; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.06); }
-
-/* ── GRUPOS GRID ── */
-.grupos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-.grupo-card {
-  background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
-.grupo-header {
-  background: rgba(255, 255, 255, 0.03);
-  padding: 14px 20px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 2px;
-  color: var(--oro);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-.grupo-table th { background: transparent; padding: 10px 16px; }
-.grupo-table td { padding: 10px 16px; background: transparent; }
-.clasificado { color: var(--verde); font-weight: 700; }
-
-/* ── BRACKET & SIMULADOR ── */
-.sim-controles { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 30px; align-items: center; }
-.fase-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px; color: var(--oro); }
-
-.grupos-sim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-.grupo-sim-card { background: var(--card-bg); border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden; }
-.grupo-sim-header { background: rgba(255,255,255,0.02); padding: 12px 16px; font-family: 'Bebas Neue', sans-serif; color: var(--oro); border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-.bracket { display: flex; gap: 24px; padding-bottom: 20px; }
-.match-card {
-  background: var(--card-bg);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-.match-equipo { padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
-.match-equipo.ganador { color: var(--verde); font-weight: 700; background: rgba(0, 230, 118, 0.05); }
-.match-equipo.perdedor { color: rgba(255,255,255,0.25); }
-.gol-badge { background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; }
-.match-equipo.ganador .gol-badge { background: var(--verde); color: var(--oscuro); }
-
-/* ── REPORTES ULTRA ── */
-.campeon-banner {
-  background: radial-gradient(circle, rgba(255, 202, 40, 0.15) 0%, transparent 70%);
-  border: 1px solid rgba(255, 202, 40, 0.3);
-  border-radius: 24px;
-  padding: 40px;
-  text-align: center;
-  margin-bottom: 40px;
-}
-.campeon-nombre { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: var(--oro); letter-spacing: 2px; text-shadow: 0 0 20px rgba(255, 202, 40, 0.4); }
-
-.reportes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-.reporte-card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; overflow: hidden; }
-.reporte-header { padding: 14px 20px; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--blanco); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.01); }
-.podio-item { display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.02); }
-.podio-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--oro); }
-
-/* TOAST & LOADING */
-#toast {
-  position: fixed; bottom: 30px; right: 30px;
-  background: var(--blanco); color: var(--oscuro); padding: 16px 28px; border-radius: 12px;
-  font-weight: 700; font-size: 0.9rem; z-index: 999; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-}
-#toast.error { background: var(--rojo); color: white; }
-.loading { text-align: center; padding: 40px; color: var(--gris); font-size: 0.9rem; }
-</style>
+<link rel="stylesheet" href="css/estilos.css">
+<script src="js/app.js" defer></script>
 </head>
 <body>
 
@@ -324,7 +41,6 @@ tbody tr:last-child td { border-bottom: none; }
     <div class="stat-card"><div class="ico">⚽</div><div class="num" id="cnt-goles">—</div><div class="lbl">Goles</div></div>
     <div class="stat-card"><div class="ico">🟨</div><div class="num" id="cnt-tarjetas">—</div><div class="lbl">Tarjetas</div></div>
   </div>
-  <p style="color:var(--gris);font-size:0.82rem;">Última actualización: <span id="ultima-act" style="color:var(--oro)">—</span></p>
 </section>
 
 <section id="sec-equipos" class="seccion">
@@ -341,474 +57,82 @@ tbody tr:last-child td { border-bottom: none; }
 </section>
 
 <section id="sec-jugadores" class="seccion">
-  <div class="seccion-titulo">Jugadores</div>
-  <div style="margin-bottom:14px;">
-    <input class="search-input" id="buscar-jugador" type="text" placeholder="🔍 Buscar jugador o país..." oninput="filtrarJugadores()">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div class="seccion-titulo" style="margin-bottom: 0;">Jugadores</div>
+    <button class="btn btn-verde" onclick="abrirModalJugador()">+ Nuevo Jugador</button>
   </div>
+  <div style="margin-bottom:14px;"><input class="search-input" id="buscar-jugador" type="text" placeholder="🔍 Buscar jugador o país..." oninput="filtrarJugadores()"></div>
   <div class="tabla-wrap">
     <table>
-      <thead><tr><th>#</th><th>Nombre</th><th>Posición</th><th>Dorsal</th><th>País</th></tr></thead>
-      <tbody id="tb-jugadores"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+      <thead><tr><th>#</th><th>Nombre</th><th>Posición</th><th>Dorsal</th><th>País</th><th style="text-align: right;">Acciones</th></tr></thead>
+      <tbody id="tb-jugadores"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody>
     </table>
   </div>
 </section>
 
 <section id="sec-estadios" class="seccion">
-  <div class="seccion-titulo">Estadios</div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div class="seccion-titulo" style="margin-bottom: 0;">Estadios</div>
+    <button class="btn btn-verde" onclick="abrirModalEstadio()">+ Nuevo Estadio</button>
+  </div>
   <div class="tabla-wrap">
     <table>
-      <thead><tr><th>#</th><th>Nombre</th><th>Ciudad</th><th>País</th><th>Capacidad</th></tr></thead>
-      <tbody id="tb-estadios"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+      <thead><tr><th>#</th><th>Nombre</th><th>Ciudad</th><th>País</th><th>Capacidad</th><th style="text-align: right;">Acciones</th></tr></thead>
+      <tbody id="tb-estadios"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody>
     </table>
   </div>
 </section>
 
-<section id="sec-entrenadores" class="seccion">
-  <div class="seccion-titulo">Entrenadores</div>
-  <div class="tabla-wrap">
-    <table>
-      <thead><tr><th>#</th><th>Nombre</th><th>País (Equipo)</th></tr></thead>
-      <tbody id="tb-entrenadores"><tr><td colspan="3" class="loading">Cargando...</td></tr></tbody>
-    </table>
-  </div>
-</section>
+<section id="sec-entrenadores" class="seccion"><div class="seccion-titulo">Entrenadores</div><div class="tabla-wrap"><table><thead><tr><th>#</th><th>Nombre</th><th>País (Equipo)</th></tr></thead><tbody id="tb-entrenadores"><tr><td colspan="3" class="loading">Cargando...</td></tr></tbody></table></div></section>
 
-<section id="sec-grupos" class="seccion">
-  <div class="seccion-titulo">Tabla de Grupos</div>
-  <p style="color:var(--gris);font-size:0.82rem;margin-bottom:18px;">✔ Los 2 primeros de cada grupo clasifican a la siguiente fase.</p>
-  <div class="grupos-grid" id="grupos-container"><div class="loading">Cargando...</div></div>
-</section>
+<section id="sec-grupos" class="seccion"><div class="seccion-titulo">Tabla de Grupos</div><div class="grupos-grid" id="grupos-container"></div></section>
 
-<section id="sec-partidos" class="seccion">
-  <div class="seccion-titulo">Partidos</div>
-  <div class="tabla-wrap">
-    <table>
-      <thead><tr><th>ID</th><th>Fase</th><th>Local</th><th>Visitante</th><th>Resultado</th><th>Fecha</th><th>Estadio</th></tr></thead>
-      <tbody id="tb-partidos"><tr><td colspan="7" class="loading">Cargando...</td></tr></tbody>
-    </table>
-  </div>
-</section>
+<section id="sec-partidos" class="seccion"><div class="seccion-titulo">Partidos</div><div class="tabla-wrap"><table><thead><tr><th>ID</th><th>Fase</th><th>Local</th><th>Visitante</th><th>Resultado</th><th>Estadio</th></tr></thead><tbody id="tb-partidos"><tr><td colspan="6" class="loading">Cargando...</td></tr></tbody></table></div></section>
 
 <section id="sec-simulador" class="seccion">
   <div class="seccion-titulo">Simulador del Torneo</div>
-  <div style="display:flex;align-items:stretch;margin-bottom:22px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);">
-    <div id="prog-1" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(45,198,83,0.2);color:var(--verde);border-right:1px solid rgba(255,255,255,0.08);cursor:pointer;" onclick="irAFase('grupos-sim')">1·GRUPOS</div>
-    <div id="prog-2" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);border-right:1px solid rgba(255,255,255,0.08);cursor:pointer;" onclick="irAFase('eliminacion')">2·16AVOS</div>
-    <div id="prog-3" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);border-right:1px solid rgba(255,255,255,0.08);">3·OCTAVOS</div>
-    <div id="prog-4" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);border-right:1px solid rgba(255,255,255,0.08);">4·CUARTOS</div>
-    <div id="prog-5" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);border-right:1px solid rgba(255,255,255,0.08);">5·SEMIS</div>
-    <div id="prog-6" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;letter-spacing:1px;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);">6·FINAL🏆</div>
+  <div style="display:flex;align-items:stretch;margin-bottom:22px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);">
+    <div id="prog-1" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;font-size:0.72rem;background:rgba(45,198,83,0.2);color:var(--verde);cursor:pointer;" onclick="irAFase('grupos-sim')">1·GRUPOS</div>
+    <div id="prog-2" style="flex:1;padding:8px 4px;text-align:center;font-family:Bebas Neue,sans-serif;font-size:0.72rem;background:rgba(255,255,255,0.03);color:var(--gris);cursor:pointer;" onclick="irAFase('eliminacion')">2·ELIMINACIÓN</div>
   </div>
 
   <div id="vista-grupos-sim">
     <div class="sim-controles">
-      <button class="btn btn-verde" onclick="simularFaseGrupos()">▶ Simular Fase de Grupos</button>
+      <button class="btn btn-verde" onclick="simularFaseGrupos()">▶ Simular Fase Grupos</button>
       <button class="btn btn-rojo" onclick="resetTodo()">↺ Reiniciar Todo</button>
-      <button onclick="limpiarBD()" style="padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;background:linear-gradient(135deg,#6a0dad,#9b30ff);color:white;">🗑️ Limpiar BD</button>
+      <button onclick="limpiarBD()" style="padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700;background:linear-gradient(135deg,#6a0dad,#9b30ff);color:white;border:none;">🗑️ Limpiar BD</button>
       <span id="estado-grupos" class="fase-label"></span>
     </div>
-    <div class="grupos-sim-grid" id="grupos-sim-container"><div class="loading">Presiona "Simular Fase de Grupos" para comenzar</div></div>
+    <div class="grupos-sim-grid" id="grupos-sim-container"><div class="loading">Presiona "Simular Fase de Grupos"</div></div>
   </div>
 
   <div id="vista-eliminacion" style="display:none;">
     <div class="sim-controles">
-      <button class="btn btn-verde" onclick="simularFase()">▶ Simular siguiente fase</button>
-      <button class="btn btn-oro" onclick="simularTodo()">⚡ Simular todo el torneo</button>
-      <button class="btn btn-rojo" onclick="resetSimulador()">↺ Reiniciar eliminación</button>
-      <span class="fase-label" id="fase-actual">OCTAVOS DE FINAL</span>
+      <button class="btn btn-verde" onclick="simularFase()">▶ Simular fase</button>
+      <button class="btn btn-oro" onclick="simularTodo()">⚡ Simular torneo completo</button>
+      <button class="btn btn-rojo" onclick="resetSimulador()">↺ Reiniciar</button>
+      <span class="fase-label" id="fase-actual">16AVOS DE FINAL</span>
     </div>
-    <div class="eventos-box" id="eventos-log"><div class="eventos-titulo">EVENTOS DEL PARTIDO</div><div id="eventos-lista"></div></div>
     <div class="bracket" id="bracket"></div>
   </div>
 </section>
 
 <section id="sec-reportes" class="seccion">
   <div class="seccion-titulo">Reportes Finales</div>
-  <div id="campeon-box" style="display:none;" class="campeon-banner">
-    <div class="campeon-trofeo">🏆</div>
-    <div class="campeon-label">Campeón del Mundo</div>
-    <div class="campeon-nombre" id="campeon-nombre">—</div>
-  </div>
+  <div id="campeon-box" style="display:none;" class="campeon-banner"><div class="campeon-trofeo">🏆</div><div class="campeon-label">Campeón del Mundo</div><div class="campeon-nombre" id="campeon-nombre">—</div></div>
   <div class="reportes-grid">
-    <div class="reporte-card">
-      <div class="reporte-header">⚽ Goleadores (Pichichi)</div>
-      <div class="podio" id="podio-goleadores"><div class="loading">Cargando...</div></div>
-    </div>
-    <div class="reporte-card">
-      <div class="reporte-header">🟨 Tarjetas por jugador</div>
-      <div class="podio" id="podio-tarjetas"><div class="loading">Cargando...</div></div>
-    </div>
-    <div class="reporte-card">
-      <div class="reporte-header">🏟️ Estadios más usados</div>
-      <div class="podio" id="podio-estadios"><div class="loading">Cargando...</div></div>
-    </div>
-    <div class="reporte-card">
-      <div class="reporte-header">🌎 Goles por país</div>
-      <div class="podio" id="podio-paises"><div class="loading">Cargando...</div></div>
-    </div>
+    <div class="reporte-card"><div class="reporte-header">⚽ Pichichi</div><div class="podio" id="podio-goleadores"></div></div>
+    <div class="reporte-card"><div class="reporte-header">🧤 Guante de Oro (Menos goles recibidos)</div><div class="podio" id="podio-porteros"></div></div>
+    <div class="reporte-card"><div class="reporte-header">🟨 Tarjetas</div><div class="podio" id="podio-tarjetas"></div></div>
+    <div class="reporte-card"><div class="reporte-header">🌎 Goles País</div><div class="podio" id="podio-paises"></div></div>
   </div>
 </section>
 
-<div id="modal-equipo" class="modal-overlay">
-  <div class="modal-content">
-    <h2 id="modal-equipo-titulo">Nuevo Equipo</h2>
-    <input type="hidden" id="eq-id">
-    
-    <div class="form-group">
-      <label>Nombre del País</label>
-      <input type="text" id="eq-pais" placeholder="Ej: Guatemala">
-    </div>
-    <div class="form-group">
-      <label>Grupo (Letra)</label>
-      <input type="text" id="eq-grupo" placeholder="Ej: A">
-    </div>
-    <div class="form-group">
-      <label>ID Grupo (Numérico)</label>
-      <input type="number" id="eq-idgrupo" placeholder="Ej: 1">
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn btn-rojo" onclick="cerrarModalEquipo()">Cancelar</button>
-      <button class="btn btn-verde" onclick="guardarEquipo()">Guardar</button>
-    </div>
-  </div>
-</div>
+<div id="modal-equipo" class="modal-overlay"><div class="modal-content"><h2 id="modal-equipo-titulo">Nuevo Equipo</h2><input type="hidden" id="eq-id"><div class="form-group"><label>País</label><input type="text" id="eq-pais"></div><div class="form-group"><label>Grupo</label><input type="text" id="eq-grupo"></div><div class="form-group"><label>ID Grupo</label><input type="number" id="eq-idgrupo"></div><div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalEquipo()">Cancelar</button><button class="btn btn-verde" onclick="guardarEquipo()">Guardar</button></div></div></div>
+<div id="modal-jugador" class="modal-overlay"><div class="modal-content"><h2 id="modal-jugador-titulo">Nuevo Jugador</h2><input type="hidden" id="jug-id"><div class="form-group"><label>Nombre</label><input type="text" id="jug-nombre"></div><div class="form-group"><label>Posición</label><select id="jug-posicion"><option value="Portero">Portero</option><option value="Defensa">Defensa</option><option value="Mediocampista">Mediocampista</option><option value="Delantero">Delantero</option></select></div><div class="form-group"><label>Dorsal</label><input type="number" id="jug-dorsal"></div><div class="form-group"><label>Equipo</label><select id="jug-idequipo"></select></div><div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalJugador()">Cancelar</button><button class="btn btn-verde" onclick="guardarJugador()">Guardar</button></div></div></div>
+<div id="modal-estadio" class="modal-overlay"><div class="modal-content"><h2 id="modal-estadio-titulo">Nuevo Estadio</h2><input type="hidden" id="est-id"><div class="form-group"><label>Nombre</label><input type="text" id="est-nombre"></div><div class="form-group"><label>Ciudad</label><input type="text" id="est-ciudad"></div><div class="form-group"><label>País</label><input type="text" id="est-pais"></div><div class="form-group"><label>Capacidad</label><input type="number" id="est-capacidad"></div><div class="modal-actions"><button class="btn btn-rojo" onclick="cerrarModalEstadio()">Cancelar</button><button class="btn btn-verde" onclick="guardarEstadio()">Guardar</button></div></div></div>
 
 <div id="toast"></div>
 
-<script>
-const API = 'http://localhost:8080/api';
-let _equipos=[], _jugadores=[], _estadios=[], _partidos=[], _goles=[], _tarjetas=[], _posiciones=[];
-
-let FASES = ['DIECISEISAVOS','OCTAVOS DE FINAL','CUARTOS DE FINAL','SEMIFINAL','FINAL'];
-let faseIdx=0, rondas=[], campeón=null;
-let gruposSimulados = {}, gruposSimulado = false;
-
-function mostrar(id, btn) {
-  document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById('sec-'+id).classList.add('activa');
-  btn.classList.add('active');
-  if(id==='equipos')   renderEquipos();
-  if(id==='jugadores') renderJugadores();
-  if(id==='estadios')  renderEstadios();
-  if(id==='entrenadores') renderEntrenadores();
-  if(id==='grupos')    renderGrupos();
-  if(id==='partidos')  renderPartidos();
-  if(id==='simulador') renderBracket();
-  if(id==='reportes')  renderReportes();
-}
-
-function irAFase(vista) {
-  document.getElementById('vista-grupos-sim').style.display = vista==='grupos-sim' ? 'block' : 'none';
-  document.getElementById('vista-eliminacion').style.display = vista==='eliminacion' ? 'block' : 'none';
-}
-
-function actualizarProgreso() {
-  for(let i=2;i<=6;i++){ const el=document.getElementById('prog-'+i); if(el){ el.style.background='rgba(255,255,255,0.03)'; el.style.color='var(--gris)'; } }
-  if(gruposSimulado){ document.getElementById('prog-1').style.background='rgba(45,198,83,0.2)'; document.getElementById('prog-1').style.color='var(--verde)'; }
-  for(let i=0;i<faseIdx&&i<5;i++){ const el=document.getElementById('prog-'+(i+2)); if(el){ el.style.background='rgba(255,214,10,0.2)'; el.style.color='var(--oro)'; } }
-  if(campeón){ const el=document.getElementById('prog-6'); if(el){ el.style.background='rgba(255,214,10,0.35)'; el.style.color='var(--oro)'; } }
-}
-
-async function get(ruta) {
-  try { const r = await fetch(API+ruta); if(!r.ok) throw new Error('HTTP '+r.status); return await r.json(); } 
-  catch(e) { toast('Error: '+ruta, true); return []; }
-}
-
-function toast(msg, err=false) {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='show'+(err?' error':'');
-  setTimeout(()=>t.className='',3200);
-}
-
-async function cargarDashboard() {
-  [_equipos,_jugadores,_estadios,_partidos,_goles,_tarjetas,_posiciones] = await Promise.all([
-    get('/equipos'),get('/jugadores'),get('/estadios'),get('/partidos'),get('/goles'),get('/tarjetas'),get('/posiciones')
-  ]);
-  document.getElementById('cnt-equipos').textContent   = _equipos.length;
-  document.getElementById('cnt-jugadores').textContent = _jugadores.length;
-  document.getElementById('cnt-estadios').textContent  = _estadios.length;
-  document.getElementById('cnt-partidos').textContent  = _partidos.length;
-  document.getElementById('cnt-goles').textContent     = _goles.length;
-  document.getElementById('cnt-tarjetas').textContent  = _tarjetas.length;
-  document.getElementById('ultima-act').textContent    = new Date().toLocaleString('es-GT');
-}
-
-// ══ EQUIPOS Y CRUD COMPLETO ══
-function renderEquipos() {
-  const tb = document.getElementById('tb-equipos');
-  if(!_equipos.length){ tb.innerHTML='<tr><td colspan="4" class="loading">Sin datos</td></tr>'; return; }
-  
-  const arr = [..._equipos];
-  for(let i=0; i<arr.length-1; i++)
-    for(let j=0; j<arr.length-1-i; j++)
-      if((arr[j].grupo||'') > (arr[j+1].grupo||'')) [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
-
-  tb.innerHTML = arr.map((e,i) => {
-    const pais = e.pais || e.nombre || '—';
-    const grupo = e.grupo || '—';
-    const id = e.idEquipo || e.idequipo;
-    const jsonStr = JSON.stringify(e).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-    
-    return `<tr>
-      <td>${i+1}</td>
-      <td><strong>${pais}</strong></td>
-      <td><span class="badge badge-grupo">Grupo ${grupo}</span></td>
-      <td style="text-align: right;">
-        <button class="btn btn-oro" style="padding: 6px 12px; font-size: 0.7rem;" onclick="editarEquipo('${jsonStr}')">✏️ Editar</button>
-        <button class="btn btn-rojo" style="padding: 6px 12px; font-size: 0.7rem;" onclick="eliminarEquipo(${id})">🗑️</button>
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-function abrirModalEquipo() {
-  document.getElementById('modal-equipo-titulo').innerText = 'NUEVO EQUIPO';
-  document.getElementById('eq-id').value = '';
-  document.getElementById('eq-pais').value = '';
-  document.getElementById('eq-grupo').value = '';
-  document.getElementById('eq-idgrupo').value = '';
-  document.getElementById('modal-equipo').style.display = 'flex';
-}
-
-function cerrarModalEquipo() { document.getElementById('modal-equipo').style.display = 'none'; }
-
-function editarEquipo(equipoJsonStr) {
-  const e = JSON.parse(equipoJsonStr);
-  document.getElementById('modal-equipo-titulo').innerText = 'EDITAR EQUIPO';
-  document.getElementById('eq-id').value = e.idEquipo || e.idequipo;
-  document.getElementById('eq-pais').value = e.pais || e.nombre;
-  document.getElementById('eq-grupo').value = e.grupo;
-  document.getElementById('eq-idgrupo').value = e.idGrupo || '';
-  document.getElementById('modal-equipo').style.display = 'flex';
-}
-
-async function guardarEquipo() {
-  const id = document.getElementById('eq-id').value;
-  const data = {
-    id_equipo: id ? parseInt(id) : 0,
-    pais: document.getElementById('eq-pais').value,
-    grupo: document.getElementById('eq-grupo').value,
-    id_grupo: parseInt(document.getElementById('eq-idgrupo').value) || 0
-  };
-  
-  try {
-    const method = id ? 'PUT' : 'POST';
-    const r = await fetch(API+'/equipos', { method: method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-    if(r.ok) {
-      toast('Equipo guardado correctamente');
-      cerrarModalEquipo();
-      _equipos = await get('/equipos'); 
-      renderEquipos(); 
-      document.getElementById('cnt-equipos').textContent = _equipos.length; 
-    } else toast('Error al guardar en el servidor', true);
-  } catch(e) { toast('Error de conexión', true); }
-}
-
-async function eliminarEquipo(id) {
-  if(!confirm('¿Estás seguro de eliminar este equipo de la base de datos?')) return;
-  try {
-    const r = await fetch(API+'/equipos', { method: 'DELETE', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ id_equipo: id }) });
-    if(r.ok) {
-      toast('Equipo eliminado permanentemente');
-      _equipos = await get('/equipos'); 
-      renderEquipos(); 
-      document.getElementById('cnt-equipos').textContent = _equipos.length; 
-    } else toast('Error al eliminar. Revisa que el equipo no tenga jugadores asignados.', true);
-  } catch(e) { toast('Error de conexión', true); }
-}
-
-// ══ OTRAS SECCIONES ══
-function renderJugadores(){filtrarJugadores();}
-function filtrarJugadores(){
-  const q=document.getElementById('buscar-jugador').value.toLowerCase();
-  const tb=document.getElementById('tb-jugadores');
-  const arr=_jugadores.filter(j=>j.nombre.toLowerCase().includes(q)||(j.paisEquipo||'').toLowerCase().includes(q));
-  if(!arr.length){tb.innerHTML='<tr><td colspan="5" class="loading">Sin resultados</td></tr>';return;}
-  tb.innerHTML=arr.map((j,i)=>`<tr><td>${i+1}</td><td><strong>${j.nombre}</strong></td><td>${j.posicion}</td><td><strong>${j.dorsal}</strong></td><td>${j.paisEquipo}</td></tr>`).join('');
-}
-
-function renderEstadios(){
-  const tb=document.getElementById('tb-estadios');
-  if(!_estadios.length){tb.innerHTML='<tr><td colspan="5" class="loading">Sin datos</td></tr>';return;}
-  const arr=[..._estadios];
-  for(let i=0;i<arr.length-1;i++){ let max=i; for(let j=i+1;j<arr.length;j++) if(arr[j].capacidad>arr[max].capacidad) max=j; [arr[i],arr[max]]=[arr[max],arr[i]]; }
-  tb.innerHTML=arr.map((e,i)=>`<tr><td>${i+1}</td><td><strong>${e.nombre}</strong></td><td>${e.ciudad}</td><td>${e.pais}</td><td>${(e.capacidad||0).toLocaleString()}</td></tr>`).join('');
-}
-
-function renderEntrenadores(){
-  const tb=document.getElementById('tb-entrenadores');
-  fetch(API+'/entrenadores').then(r=>r.json()).then(data=>{
-    if(!data.length){tb.innerHTML='<tr><td colspan="3" class="loading">Sin datos</td></tr>';return;}
-    const arr=[...data];
-    for(let i=1;i<arr.length;i++){ const key=arr[i]; let j=i-1; while(j>=0 && (arr[j].nombre||'').localeCompare(key.nombre||'')>0){arr[j+1]=arr[j];j--;} arr[j+1]=key; }
-    tb.innerHTML=arr.map((e,i)=>`<tr><td>${i+1}</td><td><strong>${e.nombre||'—'}</strong></td><td>${e.paisEquipo||'—'}</td></tr>`).join('');
-  }).catch(()=>{tb.innerHTML='<tr><td colspan="3" class="loading">Error al cargar</td></tr>';});
-}
-
-function renderGrupos(){
-  const cont=document.getElementById('grupos-container');
-  if(!_posiciones.length){cont.innerHTML='<div class="loading">Sin datos de posiciones</div>';return;}
-  const grupos={};
-  _posiciones.forEach(p=>{
-    const eq=_equipos.find(e=>e.idEquipo===p.idEquipo||e.id===p.idEquipo);
-    const grp=(eq?eq.grupo:null)||p.grupo||'?';
-    if(!grupos[grp]) grupos[grp]=[]; grupos[grp].push(p);
-  });
-  Object.values(grupos).forEach(arr=>arr.sort((a,b)=>b.puntos-a.puntos||(b.gf-b.gc)-(a.gf-a.gc)));
-  cont.innerHTML=Object.entries(grupos).sort().map(([g,pos])=>`
-    <div class="grupo-card"><div class="grupo-header">GRUPO ${g}</div><table class="grupo-table">
-      <thead><tr><th>País</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr></thead>
-      <tbody>${pos.map((p,i)=>`<tr><td class="${i<2?'clasificado':''}">${p.pais}</td><td>${p.pj}</td><td>${p.pg}</td><td>${p.pe}</td><td>${p.pp}</td><td>${p.gf}</td><td>${p.gc}</td><td><strong>${p.puntos}</strong></td></tr>`).join('')}</tbody>
-    </table></div>`).join('');
-}
-
-function renderPartidos(){
-  const tb=document.getElementById('tb-partidos');
-  if(!_partidos.length){tb.innerHTML='<tr><td colspan="7" class="loading">Sin datos</td></tr>';return;}
-  tb.innerHTML=_partidos.map(p=>`<tr><td>${p.idPartido}</td><td><span class="badge badge-fase">${p.fase}</span></td><td><strong>${p.local||'—'}</strong></td><td>${p.visitante||'—'}</td><td><strong>${p.golesLocales} — ${p.golesVisitantes}</strong></td><td>${p.fecha?p.fecha.substring(0,10):'—'}</td><td>${p.estadio||'—'}</td></tr>`).join('');
-}
-
-// ══ SIMULADOR ══
-async function guardarPosicion(eq, stats) {
-  const idEq = eq ? (eq.idEquipo || eq.id) : null;
-  if (!idEq) return;
-  fetch(API + '/posiciones/actualizar', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ idEquipo: idEq, puntos: stats.pts, pj: stats.pj, pg: stats.pg, pe: stats.pe, pp: stats.pp, gf: stats.gf, gc: stats.gc }) }).catch(()=>{});
-}
-
-function simularFaseGrupos() {
-  if(!_equipos.length){toast('Carga los datos primero',true);return;}
-  const agrupados={};
-  _equipos.forEach(e=>{ const pais=e.pais||e.nombre||'?'; const grp=e.grupo||'?'; if(!agrupados[grp]) agrupados[grp]=[]; agrupados[grp].push(pais); });
-  gruposSimulados={};
-  Object.entries(agrupados).forEach(([grp, equipos])=>{
-    const stats={};
-    equipos.forEach(eq=>stats[eq]={pais:eq,pj:0,pg:0,pe:0,pp:0,gf:0,gc:0,pts:0});
-    for(let i=0;i<equipos.length;i++){
-      for(let j=i+1;j<equipos.length;j++){
-        const local=equipos[i], vis=equipos[j], gl=Math.floor(Math.random()*4), gv=Math.floor(Math.random()*4);
-        stats[local].pj++; stats[vis].pj++; stats[local].gf+=gl; stats[local].gc+=gv; stats[vis].gf+=gv; stats[vis].gc+=gl;
-        if(gl>gv){ stats[local].pg++; stats[local].pts+=3; stats[vis].pp++; } else if(gl<gv){ stats[vis].pg++; stats[vis].pts+=3; stats[local].pp++; } else { stats[local].pe++; stats[local].pts+=1; stats[vis].pe++; stats[vis].pts+=1; }
-        const eqLocal=_equipos.find(e=>(e.pais||e.nombre)===local); const eqVis=_equipos.find(e=>(e.pais||e.nombre)===vis);
-        if(eqLocal&&eqVis){ fetch(API+'/partidos',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({fase:'FASE DE GRUPOS',idLocal:eqLocal.idEquipo||eqLocal.id,idVisitante:eqVis.idEquipo||eqVis.id,golesL:gl,golesV:gv,idEstadio:1}) }).catch(()=>{}); }
-      }
-    }
-    gruposSimulados[grp]=Object.values(stats).sort((a,b)=>b.pts-a.pts||(b.gf-b.gc)-(a.gf-a.gc)||b.gf-a.gf);
-  });
-  gruposSimulado=true; renderGruposSim();
-  Object.entries(gruposSimulados).forEach(([grp, equipos]) => { equipos.forEach(stats => { const eq = _equipos.find(e => (e.pais||e.nombre) === stats.pais); guardarPosicion(eq, stats); }); });
-  document.getElementById('estado-grupos').textContent='¡Fase de grupos completada!';
-  setTimeout(() => { irAFase('eliminacion'); faseIdx = 0; rondas = []; campeón = null; document.getElementById('fase-actual').textContent = FASES[0]; iniciarRonda0(); renderBracket(); actualizarProgreso(); toast('✅ Equipos clasificados a la fase de eliminación!'); }, 2000);
-}
-
-function renderGruposSim(){
-  const cont=document.getElementById('grupos-sim-container');
-  if(!gruposSimulado){cont.innerHTML='<div class="loading">Presiona "Simular Fase de Grupos" para comenzar</div>';return;}
-  cont.innerHTML=Object.entries(gruposSimulados).sort().map(([grp,equipos])=>`
-    <div class="grupo-sim-card"><div class="grupo-sim-header">GRUPO ${grp}</div><table class="grupo-sim-table">
-      <thead><tr><th>País</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>Pts</th></tr></thead>
-      <tbody>${equipos.map((e,i)=>`<tr><td class="${i<2?'eq-clasificado':'eq-eliminado'}">${i<2?'✔ ':''}${e.pais}</td><td>${e.pj}</td><td>${e.pg}</td><td>${e.pe}</td><td>${e.pp}</td><td>${e.gf}</td><td>${e.gc}</td><td><strong>${e.pts}</strong></td></tr>`).join('')}</tbody>
-    </table></div>`).join('');
-}
-
-async function limpiarBD() {
-  if(!confirm('¿Seguro que quieres borrar todos los partidos, goles y estadísticas?')) return;
-  try {
-    await fetch(API+'/limpiar', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
-    _goles=[]; _tarjetas=[]; _partidos=[]; _posiciones=[];
-    document.getElementById('cnt-goles').textContent='0'; document.getElementById('cnt-tarjetas').textContent='0'; document.getElementById('cnt-partidos').textContent='0';
-    resetTodo(); toast('🗑️ BD limpiada — listo para simular de nuevo');
-  } catch(e) { toast('Error al limpiar: '+e.message, true); }
-}
-
-function resetTodo(){ gruposSimulados={}; gruposSimulado=false; faseIdx=0; rondas=[]; campeón=null; document.getElementById('estado-grupos').textContent=''; document.getElementById('fase-actual').textContent=FASES[0]; document.getElementById('eventos-log').style.display='none'; renderGruposSim(); renderBracket(); irAFase('grupos-sim'); actualizarProgreso(); }
-
-function equiposParaEliminacion(){
-  let clasificados = [];
-  if(gruposSimulado && Object.keys(gruposSimulados).length > 0){
-    Object.values(gruposSimulados).forEach(arr => { if(arr[0]) clasificados.push(arr[0].pais); if(arr[1]) clasificados.push(arr[1].pais); });
-    const terceros = []; Object.values(gruposSimulados).forEach(arr => { if(arr[2]) terceros.push(arr[2]); });
-    terceros.sort((a,b)=>b.pts-a.pts||(b.gf-b.gc)-(a.gf-a.gc)||b.gf-a.gf);
-    terceros.slice(0,8).forEach(t=>clasificados.push(t.pais));
-  }
-  if(clasificados.length < 32){
-    const extras = _equipos.map(e => e.pais || e.nombre || '—').filter(p => !clasificados.includes(p));
-    for(let i=extras.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [extras[i],extras[j]]=[extras[j],extras[i]]; }
-    while(clasificados.length < 32 && extras.length > 0) clasificados.push(extras.shift());
-  }
-  if(clasificados.length > 32) clasificados = clasificados.slice(0,32);
-  for(let i=clasificados.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [clasificados[i],clasificados[j]]=[clasificados[j],clasificados[i]]; }
-  return clasificados;
-}
-
-function iniciarRonda0(){ const eq = equiposParaEliminacion(); rondas = [[]]; for(let i=0; i<eq.length; i+=2) rondas[0].push({ local: eq[i]||'—', visitante:eq[i+1]||'—', golesL:null, golesV:null, ganador:null }); }
-
-function simularFase(){
-  if(faseIdx===0&&rondas.length===0) iniciarRonda0();
-  if(faseIdx>=FASES.length){toast('El torneo ya finalizó');return;}
-  const rondaActual=rondas[faseIdx]; if(!rondaActual){toast('Sin partidos');return;}
-  let ultimosEventos=[];
-  rondaActual.forEach(m=>{
-    if(m.ganador) return;
-    let gl=Math.floor(Math.random()*4),gv=Math.floor(Math.random()*4); if(gl===gv){gl===0?gl++:gv--;}
-    m.golesL=gl; m.golesV=gv; m.ganador=gl>gv?m.local:m.visitante;
-    const eqL=_equipos.find(e=>(e.pais||e.nombre)===m.local); const eqV=_equipos.find(e=>(e.pais||e.nombre)===m.visitante);
-    if(eqL&&eqV){ fetch(API+'/partidos',{method:'POST',headers:{'Content-Type':'application/json'}, body:JSON.stringify({fase:FASES[faseIdx],idLocal:eqL.idEquipo||eqL.id,idVisitante:eqV.idEquipo||eqV.id,golesL:gl,golesV:gv,idEstadio:1}) }).catch(()=>{}); }
-  });
-  const ganadores=rondaActual.map(m=>m.ganador);
-  faseIdx++;
-  if(ganadores.length===1){ campeón=ganadores[0]; document.getElementById('fase-actual').textContent='🏆 CAMPEÓN: '+campeón; toast('¡'+campeón+' es el Campeón del Mundo! 🏆'); } 
-  else {
-    document.getElementById('fase-actual').textContent=FASES[faseIdx]||'—';
-    const nuevaRonda=[]; for(let i=0;i<ganadores.length;i+=2) nuevaRonda.push({local:ganadores[i],visitante:ganadores[i+1]||'—',golesL:null,golesV:null,ganador:null});
-    rondas.push(nuevaRonda);
-  }
-  renderBracket(); actualizarProgreso();
-}
-
-function simularTodo(){ resetSimulador(); iniciarRonda0(); while(faseIdx<FASES.length&&!campeón) simularFase(); setTimeout(async ()=>{ _goles = await get('/goles'); _tarjetas = await get('/tarjetas'); _partidos = await get('/partidos'); _posiciones= await get('/posiciones'); document.getElementById('cnt-goles').textContent = _goles.length; document.getElementById('cnt-tarjetas').textContent = _tarjetas.length; document.getElementById('cnt-partidos').textContent = _partidos.length; toast('✅ Datos actualizados — revisa Reportes'); }, 1500); }
-function resetSimulador(){ faseIdx=0;rondas=[];campeón=null; document.getElementById('fase-actual').textContent=FASES[0]; document.getElementById('eventos-log').style.display='none'; renderBracket(); }
-
-function renderBracket(){
-  const cont=document.getElementById('bracket');
-  if(!rondas.length){ cont.innerHTML=`<div style="padding:40px;color:var(--gris);font-size:0.88rem;">Primero simula la Fase de Grupos.</div>`; return; }
-  cont.innerHTML=rondas.map((ronda,ri)=>`
-    <div class="ronda"><div class="ronda-titulo">${FASES[ri]||'—'}</div><div class="ronda-partidos">
-      ${ronda.map(m=>`
-        <div class="match-card">
-          <div class="match-equipo ${m.ganador===m.local?'ganador':m.ganador?'perdedor':''}"><span>${m.local}</span>${m.golesL!==null?`<span class="gol-badge">${m.golesL}</span>`:''}</div>
-          <div class="match-equipo ${m.ganador===m.visitante?'ganador':m.ganador?'perdedor':''}"><span>${m.visitante}</span>${m.golesV!==null?`<span class="gol-badge">${m.golesV}</span>`:''}</div>
-        </div>`).join('')}
-    </div></div>`).join('');
-}
-
-// ══ REPORTES ══
-async function renderReportes(){
-  _goles = await get('/goles'); _tarjetas = await get('/tarjetas'); _partidos = await get('/partidos');
-  if(campeón){ document.getElementById('campeon-box').style.display='block'; document.getElementById('campeon-nombre').textContent=campeón; }
-  
-  const contGoles={}; _goles.forEach(g=>{const k=g.jugador||('Jugador #'+g.idJugador);contGoles[k]=(contGoles[k]||0)+1;});
-  renderPodio('podio-goleadores',Object.entries(contGoles).sort((a,b)=>b[1]-a[1]).slice(0,10),'gol(es)');
-
-  const contTarj={}; _tarjetas.forEach(t=>{const k=t.jugador||('Jugador #'+t.idJugador);contTarj[k]=(contTarj[k]||0)+1;});
-  renderPodio('podio-tarjetas',Object.entries(contTarj).sort((a,b)=>b[1]-a[1]).slice(0,10),'tarjeta(s)');
-
-  const contEst={}; _partidos.forEach(p=>{if(p.estadio)contEst[p.estadio]=(contEst[p.estadio]||0)+1;});
-  renderPodio('podio-estadios',Object.entries(contEst).sort((a,b)=>b[1]-a[1]).slice(0,5),'partido(s)');
-
-  const contPais={}; _goles.forEach(g=>{ const jug=_jugadores.find(j=>j.idJugador===g.idJugador); const pais=jug?jug.paisEquipo:'Desconocido'; contPais[pais]=(contPais[pais]||0)+1; });
-  renderPodio('podio-paises',Object.entries(contPais).sort((a,b)=>b[1]-a[1]).slice(0,8),'gol(es)');
-}
-
-function renderPodio(id,data,unidad){
-  const cont=document.getElementById(id);
-  if(!data.length){cont.innerHTML='<div class="loading">Sin datos</div>';return;}
-  const ico={0:'🥇',1:'🥈',2:'🥉'};
-  cont.innerHTML=data.map(([nombre,val],i)=>`<div class="podio-item"><div class="podio-pos ${i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':''}">${ico[i]||(i+1)}</div><div class="podio-nombre">${nombre}</div><div class="podio-val">${val} <small style="font-size:0.62rem;color:var(--gris)">${unidad}</small></div></div>`).join('');
-}
-
-window.addEventListener('DOMContentLoaded', cargarDashboard);
-</script>
 </body>
 </html>

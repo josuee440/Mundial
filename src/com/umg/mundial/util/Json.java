@@ -64,14 +64,11 @@ public class Json {
         return sb.append("]").toString();
     }
 
-    // ─── JUGADORES ───────────────────────────────────────────────────────────
+    // ─── JUGADORES (CORREGIDO) ───────────────────────────────────────────────
     public static String jugadorestoJson(List<Jugador> lista) {
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < lista.size(); i++) {
             Jugador j = lista.get(i);
-            // El equipo puede venir con JOIN o ser null si no se hizo JOIN
-            String paisEquipo = (j.getEquipo() != null) ? esc(j.getEquipo().getPais()) : "";
-            int idEquipo      = (j.getEquipo() != null) ? j.getEquipo().getIdequipo() : 0;
             sb.append(String.format(
                 "{\"idJugador\":%d,\"nombre\":\"%s\",\"posicion\":\"%s\",\"dorsal\":%d," +
                 "\"idEquipo\":%d,\"paisEquipo\":\"%s\"}",
@@ -79,8 +76,8 @@ public class Json {
                 esc(j.getNombre()),
                 esc(j.getPosicion()),
                 j.getDorsal(),
-                idEquipo,
-                paisEquipo
+                j.getIdEquipo(),
+                esc(j.getPaisEquipo() != null ? j.getPaisEquipo() : "")
             ));
             if (i < lista.size() - 1) sb.append(",");
         }
